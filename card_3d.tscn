@@ -1,0 +1,90 @@
+[gd_scene load_steps=12 format=3 uid="uid://by3hxdisgs3ho"]
+
+[ext_resource type="Script" uid="uid://dstwl21wp2qw1" path="res://card_3d.gd" id="1_03v04"]
+[ext_resource type="Texture2D" uid="uid://2hdiifnn1ape" path="res://card_ghost_base.png" id="1_l03i2"]
+[ext_resource type="Texture2D" uid="uid://dc6f5p5t31hmh" path="res://card_banner.png" id="2_03v04"]
+[ext_resource type="Texture2D" uid="uid://du3gbqisqsfvo" path="res://card_mount.png" id="3_djlq2"]
+[ext_resource type="Texture2D" uid="uid://b0xl8q6iiecp7" path="res://card_description.png" id="4_6uw2g"]
+[ext_resource type="Texture2D" uid="uid://d4hknl182a46m" path="res://card_ink.png" id="5_yhvq1"]
+[ext_resource type="Texture2D" uid="uid://c7wv11e56a5cn" path="res://card_health.png" id="6_gtr7n"]
+[ext_resource type="Texture2D" uid="uid://tevmavp3dyox" path="res://card_ghost_portrait_zephyr.png" id="7_tx6sl"]
+
+[sub_resource type="Animation" id="Animation_l03i2"]
+resource_name = "idle"
+length = 8.0
+loop_mode = 1
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RotationContainer:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(2, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.17453292, 0), Vector3(0, 0.17453292, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_03v04"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RotationContainer:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_03v04"]
+_data = {
+&"RESET": SubResource("Animation_03v04"),
+&"idle": SubResource("Animation_l03i2")
+}
+
+[node name="Card3D" type="Node3D"]
+script = ExtResource("1_03v04")
+
+[node name="RotationContainer" type="Node3D" parent="."]
+
+[node name="Base" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0)
+texture = ExtResource("1_l03i2")
+
+[node name="Banner" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.79922175)
+texture = ExtResource("2_03v04")
+
+[node name="Mount" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.16131425)
+texture = ExtResource("3_djlq2")
+
+[node name="Plaque" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.24568152)
+texture = ExtResource("4_6uw2g")
+
+[node name="InkIcon" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.4)
+texture = ExtResource("5_yhvq1")
+
+[node name="HealthIcon" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.4)
+texture = ExtResource("6_gtr7n")
+
+[node name="Portrait" type="Sprite3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.41699433)
+texture = ExtResource("7_tx6sl")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.76014)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_03v04")
+}
