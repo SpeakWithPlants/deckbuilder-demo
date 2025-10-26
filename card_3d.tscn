@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://by3hxdisgs3ho"]
+[gd_scene load_steps=13 format=3 uid="uid://by3hxdisgs3ho"]
 
 [ext_resource type="Script" uid="uid://dstwl21wp2qw1" path="res://card_3d.gd" id="1_03v04"]
 [ext_resource type="Texture2D" uid="uid://2hdiifnn1ape" path="res://card_ghost_base.png" id="1_l03i2"]
@@ -8,24 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://d4hknl182a46m" path="res://card_ink.png" id="5_yhvq1"]
 [ext_resource type="Texture2D" uid="uid://c7wv11e56a5cn" path="res://card_health.png" id="6_gtr7n"]
 [ext_resource type="Texture2D" uid="uid://tevmavp3dyox" path="res://card_ghost_portrait_zephyr.png" id="7_tx6sl"]
-
-[sub_resource type="Animation" id="Animation_l03i2"]
-resource_name = "idle"
-length = 8.0
-loop_mode = 1
-step = 0.25
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("RotationContainer:rotation")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(2, 6),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector3(0, -0.17453292, 0), Vector3(0, 0.17453292, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_03v04"]
 length = 0.001
@@ -42,11 +24,33 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_l03i2"]
+resource_name = "examine_oscillate"
+length = 8.0
+loop_mode = 1
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RotationContainer:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(2, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.13962634, -0.17453292, 0), Vector3(-0.13962634, 0.17453292, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_03v04"]
 _data = {
 &"RESET": SubResource("Animation_03v04"),
-&"idle": SubResource("Animation_l03i2")
+&"examine_oscillate": SubResource("Animation_l03i2")
 }
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_03v04"]
+resource_local_to_scene = true
+size = Vector3(10.5, 16, 1.5)
 
 [node name="Card3D" type="Node3D"]
 script = ExtResource("1_03v04")
@@ -54,37 +58,45 @@ script = ExtResource("1_03v04")
 [node name="RotationContainer" type="Node3D" parent="."]
 
 [node name="Base" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.35315037)
 texture = ExtResource("1_l03i2")
 
 [node name="Banner" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.79922175)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, -0.6200094, 0.4979756)
 texture = ExtResource("2_03v04")
 
 [node name="Mount" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.16131425)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.19183612)
 texture = ExtResource("3_djlq2")
 
 [node name="Plaque" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.24568152)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.10746884)
 texture = ExtResource("4_6uw2g")
 
 [node name="InkIcon" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
 texture = ExtResource("5_yhvq1")
 
 [node name="HealthIcon" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
 texture = ExtResource("6_gtr7n")
 
 [node name="Portrait" type="Sprite3D" parent="RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95929337, 0.41699433)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, 0.19632745)
 texture = ExtResource("7_tx6sl")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.76014)
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+size = 21.388
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_03v04")
 }
+
+[node name="MouseArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MouseArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_03v04")
+debug_color = Color(0, 0.6, 0.69803923, 0.7019608)
