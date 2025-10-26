@@ -1,20 +1,25 @@
-extends Control
+extends Node2D
 
 
-@onready var card = $SubViewportContainer/SubViewport/Card3D
+@onready var card = $SubViewport/Card3D
+@onready var click_drag_component = $ClickAndDraggable
 
 
-func _process(_delta: float) -> void:
-	queue_redraw()
+func _ready() -> void:
+	$MouseArea.mouse_entered.connect(_on_mouse_entered)
+	$MouseArea.mouse_exited.connect(_on_mouse_exited)
 	pass
 
 
-func _draw() -> void:
-	#draw_circle(Vector2.ZERO, 5.0, Color.RED, true, -1.0, true)
-	#var half_size = card.proj_size / 2
-	#draw_circle(Vector2(-half_size.x, half_size.y), 5.0, Color.RED, true, -1.0, true)
-	#draw_circle(Vector2(half_size.x, -half_size.y), 5.0, Color.RED, true, -1.0, true)
-	#draw_circle(Vector2(-half_size.x, -half_size.y), 5.0, Color.RED, true, -1.0, true)
-	#draw_circle(Vector2(half_size.x, half_size.y), 5.0, Color.RED, true, -1.0, true)
-	#draw_circle(card.hover_pos, 5.0, Color.RED, true, -1.0, true)
+func _on_mouse_entered():
+	if SessionState.drag_target != null:
+		return # ignore mouse signals if something is being dragged
+	card.on_mouse_entered_anim()
+	pass
+
+
+func _on_mouse_exited():
+	if SessionState.drag_target != null:
+		return # ignore mouse signals if something is being dragged
+	card.on_mouse_exited_anim()
 	pass

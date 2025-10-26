@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://by3hxdisgs3ho"]
+[gd_scene load_steps=12 format=3 uid="uid://by3hxdisgs3ho"]
 
 [ext_resource type="Script" uid="uid://dstwl21wp2qw1" path="res://card_3d.gd" id="1_03v04"]
 [ext_resource type="Texture2D" uid="uid://2hdiifnn1ape" path="res://card_ghost_base.png" id="1_l03i2"]
@@ -48,10 +48,6 @@ _data = {
 &"examine_oscillate": SubResource("Animation_l03i2")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_03v04"]
-resource_local_to_scene = true
-size = Vector3(10.5, 16, 1.5)
-
 [node name="Card3D" type="Node3D"]
 script = ExtResource("1_03v04")
 
@@ -93,10 +89,3 @@ size = 21.388
 libraries = {
 &"": SubResource("AnimationLibrary_03v04")
 }
-
-[node name="MouseArea" type="Area3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MouseArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("BoxShape3D_03v04")
-debug_color = Color(0, 0.6, 0.69803923, 0.7019608)
