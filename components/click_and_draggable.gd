@@ -2,6 +2,7 @@ extends Component2D
 class_name ClickAndDraggable
 
 @export var mouse_area: Area2D
+@export var click_action: String = "mouse_left"
 @export var center_on_pivot: bool = true
 @export var drag_pivot: Marker2D
 
@@ -9,12 +10,13 @@ var mouse_hovered
 var mouse_offset 
 
 func _ready():
+	assert(mouse_area != null, "ClickAndDraggable component requires mouse_area")
 	mouse_area.mouse_entered.connect(_mouse_entered)
 	mouse_area.mouse_exited.connect(_mouse_exited)
 	pass
 
 func _physics_process(_delta: float) -> void:
-	if mouse_hovered and Input.is_action_just_pressed("mouse_left"):
+	if mouse_hovered and Input.is_action_just_pressed(click_action):
 		SessionState.drag_target = get_parent()
 		mouse_offset = get_local_mouse_position()
 	if SessionState.drag_target == get_parent():
@@ -26,6 +28,12 @@ func _physics_process(_delta: float) -> void:
 		else:
 			new_pos = mouse_pos - mouse_offset
 		get_parent().global_position = new_pos
+	pass
+
+
+func set_enabled(enabled: bool = true):
+	for collider in mouse_area.get_children():
+		collider.disabled = not enabled
 	pass
 
 

@@ -3,9 +3,11 @@ extends Node3D
 const max_rotation = PI / 24
 const hover_easing = -5.0
 const hover_speed = 0.05
-const camera_default_pos = Vector3(0.0, 0.0, 20.0)
-const camera_mouseover_pos = Vector3(0.0, 0.0, 18.0)
-const mouseover_anim_time = 0.3
+const camera_default_pos = Vector3(0.0, -0.175, 36.0)
+const camera_mouseover_pos = Vector3(0.0, -0.175, 34.0)
+const camera_examine_pos = Vector3(0.0, -0.175, 24.0)
+const mouseover_anim_time = 0.4
+const examine_anim_time = 0.45
 
 var mouseover_tween: Tween
 
@@ -14,11 +16,6 @@ var hover_pos = Vector2.ZERO
 var corner_pos: Array[Vector2] = []
 var proj_pos = Vector2.ZERO
 var proj_size = Vector2.ZERO
-
-
-func _ready() -> void:
-	start_idle_animation()
-	pass
 
 
 #func _process_mouse_hover_rotation():
@@ -34,23 +31,16 @@ func _ready() -> void:
 	#pass
 
 
-func start_idle_animation():
-	$AnimationPlayer.play("RESET")
-	pass
-
-
-func start_examine_animation():
-	$AnimationPlayer.play("examine_oscillate")
-	pass
-
-
-func on_mouse_entered_anim():
-	_tween_camera_to(camera_mouseover_pos, mouseover_anim_time)
-	pass
-
-
-func on_mouse_exited_anim():
-	_tween_camera_to(camera_default_pos, mouseover_anim_time)
+func enter_state(state: String) -> void:
+	if state == "idle":
+		$AnimationPlayer.play("RESET")
+		_tween_camera_to(camera_default_pos, mouseover_anim_time)
+	elif state == "mouseover":
+		$AnimationPlayer.play("RESET")
+		_tween_camera_to(camera_mouseover_pos, mouseover_anim_time)
+	elif state == "examine":
+		$AnimationPlayer.play("examine_oscillate")
+		_tween_camera_to(camera_examine_pos, examine_anim_time)
 	pass
 
 
