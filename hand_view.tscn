@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckha2f7rn6y3v"]
+
+[ext_resource type="Script" uid="uid://celpsd7cocucj" path="res://hand_view.gd" id="1_b7107"]
+[ext_resource type="PackedScene" uid="uid://cvpsjeimxbxxk" path="res://card_pile.tscn" id="2_b0ls8"]
+
+[node name="HandView" type="Node2D"]
+script = ExtResource("1_b7107")
+
+[node name="DrawPile" parent="." instance=ExtResource("2_b0ls8")]
+position = Vector2(1800, 873)
+
+[node name="HandPile" parent="." instance=ExtResource("2_b0ls8")]
+position = Vector2(960, 873)
+
+[node name="DiscardPile" parent="." instance=ExtResource("2_b0ls8")]
+position = Vector2(120, 873)

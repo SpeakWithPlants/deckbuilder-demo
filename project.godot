@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 SessionState="*res://autoload/session_state.gd"
+GameState="*res://autoload/game_state.gd"
 
 [display]
 

@@ -1,6 +1,8 @@
 extends Node
 
 
+var debug_text: String = ""
+
 var drag_target = null
 
 
