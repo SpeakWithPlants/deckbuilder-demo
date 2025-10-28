@@ -40,5 +40,5 @@ func size() -> int:
 
 func _reorder() -> void:
 	for i in range(pile.size()):
-		pile[i].z_index = pile.size() - i
+		pile[i].z_index = GameState.deck.size() * z_index - i
 	pass

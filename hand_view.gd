@@ -1,9 +1,13 @@
 extends Node2D
 
-const arc_radius = 2000.0
-const preferred_card_angle = PI / 48
-const max_arc_angle = PI / 6
-const min_card_angle = PI / 180
+const preferred_arc_length = PI * 60
+const min_card_arc_length = PI * 11
+const max_hand_arc_length = PI * 330
+const arc_radius = 4000.0
+
+const preferred_card_angle = preferred_arc_length / arc_radius
+const max_arc_angle = max_hand_arc_length / arc_radius
+const min_card_angle = min_card_arc_length / arc_radius
 
 
 func _ready() -> void:
@@ -18,8 +22,6 @@ func _ready() -> void:
 	$DrawPile.shuffle()
 	await get_tree().create_timer(1.0).timeout
 	do_starting_draw()
-	await get_tree().create_timer(15.0).timeout
-	discard_hand()
 	pass
 
 
@@ -27,6 +29,14 @@ func _process(_delta: float) -> void:
 	SessionState.debug_text = str(Time.get_ticks_msec())
 	if $DrawPile.size() < 1:
 		return
+	pass
+
+
+func _physics_process(_delta: float) -> void:
+	if Input.is_action_just_pressed("ui_accept"):
+		discard_hand()
+		await get_tree().create_timer(3.0).timeout
+		do_starting_draw()
 	pass
 
 
@@ -45,7 +55,7 @@ func discard_hand() -> void:
 	discard_tween.pause()
 	discard_tween.set_parallel(false)
 	for i in range(GameState.starting_draw):
-		discard_tween.tween_callback(discard_card).set_delay(0.2)
+		discard_tween.tween_callback(discard_card).set_delay(0.1)
 	discard_tween.play()
 	pass
 
@@ -74,7 +84,7 @@ func _reposition_hand() -> void:
 	var preferred_arc_angle = preferred_card_angle * hand_size
 	var arc_angle = min(max_arc_angle, preferred_arc_angle)
 	var card_angle = max(min_card_angle, arc_angle / hand_size)
-	arc_angle = card_angle * hand_size
+	arc_angle = card_angle * (hand_size - 1.0)
 	for i in range(hand_size):
 		var orientation = _get_card_orientation(i, hand_size, arc_angle)
 		$HandPile.pile[i].target_pos = orientation.target_pos
