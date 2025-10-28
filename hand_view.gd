@@ -1,21 +1,21 @@
 extends Node2D
 
-const max_separation = Vector2(130.0, 10.0)
-const max_hand_size = Vector2(1500.0, 50.0)
-const max_card_rotation = PI / 8
+const arc_radius = 2000.0
+const preferred_card_angle = PI / 48
+const max_arc_angle = PI / 6
+const min_card_angle = PI / 180
 
-var track_this_card = null
 
 func _ready() -> void:
-	await get_tree().physics_frame
+	await get_tree().root.ready
 	var i = 0
 	for card in GameState.deck:
 		card.global_position = $DrawPile.global_position
 		card.modulate = Color(i / (GameState.starting_draw - 1.0), 0.5, 0.5)
 		add_child(card)
-		$DrawPile.add_to_front(card)
+		$DrawPile.add_to_top(card)
 		i += 1
-	track_this_card = GameState.deck[GameState.deck.size() - 1]
+	$DrawPile.shuffle()
 	await get_tree().create_timer(1.0).timeout
 	do_starting_draw()
 	await get_tree().create_timer(15.0).timeout
@@ -35,7 +35,7 @@ func do_starting_draw() -> void:
 	draw_tween.pause()
 	draw_tween.set_parallel(false)
 	for i in range(GameState.starting_draw):
-		draw_tween.tween_callback(draw_card).set_delay(1.0)
+		draw_tween.tween_callback(draw_card).set_delay(0.2)
 	draw_tween.play()
 	pass
 
@@ -52,14 +52,16 @@ func discard_hand() -> void:
 
 func draw_card() -> void:
 	var card = $DrawPile.draw_from_top()
-	$HandPile.add_to_back(card)
+	if card == null:
+		return
+	$HandPile.add_to_bottom(card)
 	_reposition_hand()
 	pass
 
 
 func discard_card() -> void:
 	var card = $HandPile.draw_from_top()
-	$DiscardPile.add_to_front(card)
+	$DiscardPile.add_to_top(card)
 	card.target_pos = $DiscardPile.global_position
 	card.target_rot = 0
 	card.tween_to_target_orientation()
@@ -69,8 +71,12 @@ func discard_card() -> void:
 
 func _reposition_hand() -> void:
 	var hand_size = $HandPile.size()
+	var preferred_arc_angle = preferred_card_angle * hand_size
+	var arc_angle = min(max_arc_angle, preferred_arc_angle)
+	var card_angle = max(min_card_angle, arc_angle / hand_size)
+	arc_angle = card_angle * hand_size
 	for i in range(hand_size):
-		var orientation = _get_card_orientation(i, hand_size)
+		var orientation = _get_card_orientation(i, hand_size, arc_angle)
 		$HandPile.pile[i].target_pos = orientation.target_pos
 		$HandPile.pile[i].target_rot = orientation.target_rot
 	for card in $HandPile.pile:
@@ -78,7 +84,7 @@ func _reposition_hand() -> void:
 	pass
 
 
-func _get_card_orientation(hand_idx: int, hand_size: int) -> Dictionary:
+func _get_card_orientation(hand_idx: int, hand_size: int, arc_angle: float) -> Dictionary:
 	var hand_pos = $HandPile.global_position
 	if hand_size == 1:
 		return {
@@ -86,13 +92,10 @@ func _get_card_orientation(hand_idx: int, hand_size: int) -> Dictionary:
 			"target_rot": 0
 		}
 	var idx_weight = (hand_idx / (hand_size - 1.0)) * 2.0 - 1.0
-	var hand_width = min(max_hand_size.x, max_separation.x * hand_size)
-	var hand_height = min(max_hand_size.y, max_separation.y * hand_size)
-	var card_x = idx_weight * hand_width / 2.0
-	var card_y = (1.0 - cos(idx_weight * PI / 2.0)) * hand_height
-	var card_rot = max_card_rotation * card_x / (max_hand_size.x / 2.0)
-	var card_pos = Vector2(card_x + hand_pos.x, card_y + hand_pos.y)
+	var idx_angle = (arc_angle / 2) * idx_weight
+	var idx_pos_x = arc_radius * sin(idx_angle)
+	var idx_pos_y = arc_radius * (1 - cos(idx_angle))
 	return {
-		"target_pos": card_pos,
-		"target_rot": card_rot
+		"target_pos": hand_pos + Vector2(idx_pos_x, idx_pos_y),
+		"target_rot": idx_angle
 	}
