@@ -1,13 +1,16 @@
 extends Node2D
 
 const preferred_arc_length = PI * 60
-const min_card_arc_length = PI * 11
+const min_card_arc_length = PI * 15
 const max_hand_arc_length = PI * 330
 const arc_radius = 4000.0
 
+const hover_up = preferred_arc_length / 4
 const preferred_card_angle = preferred_arc_length / arc_radius
 const max_arc_angle = max_hand_arc_length / arc_radius
 const min_card_angle = min_card_arc_length / arc_radius
+
+var hovered_cards: Array[CardView] = []
 
 
 func _ready() -> void:
@@ -19,6 +22,10 @@ func _ready() -> void:
 		add_child(card)
 		$DrawPile.add_to_top(card)
 		i += 1
+	await get_tree().physics_frame
+	for card in GameState.deck:
+		card.mouse_area.connect("mouse_entered", _on_mouse_entered_card.bind(card))
+		card.mouse_area.connect("mouse_exited", _on_mouse_exited_card.bind(card))
 	$DrawPile.shuffle()
 	await get_tree().create_timer(1.0).timeout
 	do_starting_draw()
@@ -72,9 +79,28 @@ func draw_card() -> void:
 func discard_card() -> void:
 	var card = $HandPile.draw_from_top()
 	$DiscardPile.add_to_top(card)
-	card.target_pos = $DiscardPile.global_position
-	card.target_rot = 0
 	card.tween_to_target_orientation()
+	_reposition_hand()
+	pass
+
+
+func _on_mouse_entered_card(card: CardView) -> void:
+	if card.face_down:
+		return
+	hovered_cards.append(card)
+	card.tween_to_hover_orientation()
+	card.previous_z_index = card.z_index
+	card.z_index = GameState.deck.size() + 1
+	_reposition_hand()
+	pass
+
+
+func _on_mouse_exited_card(card: CardView) -> void:
+	if card.face_down:
+		return
+	hovered_cards.erase(card)
+	card.tween_to_target_orientation()
+	card.z_index = card.previous_z_index
 	_reposition_hand()
 	pass
 
@@ -85,24 +111,33 @@ func _reposition_hand() -> void:
 	var arc_angle = min(max_arc_angle, preferred_arc_angle)
 	var card_angle = max(min_card_angle, arc_angle / hand_size)
 	arc_angle = card_angle * (hand_size - 1.0)
+	var info = {
+		"hand_size": hand_size,
+		"arc_angle": arc_angle,
+		"card_angle": card_angle
+	}
 	for i in range(hand_size):
-		var orientation = _get_card_orientation(i, hand_size, arc_angle)
-		$HandPile.pile[i].target_pos = orientation.target_pos
-		$HandPile.pile[i].target_rot = orientation.target_rot
-	for card in $HandPile.pile:
-		card.tween_to_target_orientation()
+		var card = $HandPile.pile[i]
+		var orientation = _get_card_orientation(i, info)
+		card.target_pos = orientation.target_pos
+		card.target_rot = orientation.target_rot
+		card.hover_pos = Vector2(card.target_pos.x, card.target_pos.y - hover_up)
+		if card.hovered:
+			card.tween_to_hover_orientation()
+		else:
+			card.tween_to_target_orientation()
 	pass
 
 
-func _get_card_orientation(hand_idx: int, hand_size: int, arc_angle: float) -> Dictionary:
+func _get_card_orientation(hand_idx: int, info: Dictionary) -> Dictionary:
 	var hand_pos = $HandPile.global_position
-	if hand_size == 1:
+	if info.hand_size <= 1:
 		return {
 			"target_pos": Vector2(hand_pos.x, hand_pos.y),
 			"target_rot": 0
 		}
-	var idx_weight = (hand_idx / (hand_size - 1.0)) * 2.0 - 1.0
-	var idx_angle = (arc_angle / 2) * idx_weight
+	var idx_weight = (hand_idx / (info.hand_size - 1.0)) * 2.0 - 1.0
+	var idx_angle = (info.arc_angle / 2) * idx_weight
 	var idx_pos_x = arc_radius * sin(idx_angle)
 	var idx_pos_y = arc_radius * (1 - cos(idx_angle))
 	return {

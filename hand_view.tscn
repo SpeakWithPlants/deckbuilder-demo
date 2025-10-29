@@ -13,6 +13,7 @@ position = Vector2(120, 873)
 [node name="HandPile" parent="." instance=ExtResource("2_b0ls8")]
 z_index = 1
 position = Vector2(960, 833)
+face_down = false
 
 [node name="DrawPile" parent="." instance=ExtResource("2_b0ls8")]
 z_index = -1

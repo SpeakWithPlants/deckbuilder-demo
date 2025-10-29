@@ -2,6 +2,7 @@ extends Marker2D
 class_name CardPile
 
 @export var pile: Array[CardView] = []
+@export var face_down: bool = true
 
 
 func add_to_top(card: CardView) -> void:
@@ -22,12 +23,6 @@ func draw_from_top() -> CardView:
 	return card
 
 
-func pull_card(hand_idx: int) -> CardView:
-	var card = pile.pop_at(hand_idx)
-	_reorder()
-	return card
-
-
 func shuffle() -> void:
 	pile.shuffle()
 	_reorder()
@@ -40,5 +35,9 @@ func size() -> int:
 
 func _reorder() -> void:
 	for i in range(pile.size()):
+		pile[i].face_down = self.face_down
+		pile[i].target_pos = global_position
+		pile[i].target_rot = global_rotation
+		pile[i].pile_idx = i
 		pile[i].z_index = GameState.deck.size() * z_index - i
 	pass

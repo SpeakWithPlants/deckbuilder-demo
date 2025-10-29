@@ -39,7 +39,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(2, 6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(-0.13962634, -0.17453292, 0), Vector3(-0.13962634, 0.17453292, 0)]
+"values": [Vector3(-0.05235988, -0.17453292, 0), Vector3(-0.05235988, 0.17453292, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_03v04"]
@@ -82,9 +82,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, 0.
 texture = ExtResource("7_tx6sl")
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.175, 36)
-keep_aspect = 0
-fov = 50.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
 size = 21.388
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

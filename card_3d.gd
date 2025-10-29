@@ -3,11 +3,9 @@ extends Node3D
 const max_rotation = PI / 24
 const hover_easing = -5.0
 const hover_speed = 0.05
-const camera_default_pos = Vector3(0.0, -0.175, 36.0)
-const camera_mouseover_pos = Vector3(0.0, -0.175, 34.0)
-const camera_examine_pos = Vector3(0.0, -0.175, 24.0)
-const mouseover_anim_time = 0.4
-const examine_anim_time = 0.45
+const camera_default_pos = Vector3(0.0, 0.2, 13.0)
+const camera_examine_pos = Vector3(0.0, 0.0, 13.0)
+const anim_trans_time = 0.45
 
 var mouseover_tween: Tween
 
@@ -16,6 +14,26 @@ var hover_pos = Vector2.ZERO
 var corner_pos: Array[Vector2] = []
 var proj_pos = Vector2.ZERO
 var proj_size = Vector2.ZERO
+
+
+func enter_state(state: String) -> void:
+	if state == "idle":
+		_tween_camera_to(camera_default_pos, anim_trans_time)
+		$AnimationPlayer.play("RESET")
+	elif state == "examine":
+		_tween_camera_to(camera_examine_pos, anim_trans_time)
+		$AnimationPlayer.play("examine_oscillate")
+	pass
+
+
+func _tween_camera_to(pos: Vector3, delta_time: float) -> void:
+	if mouseover_tween != null:
+		mouseover_tween.kill()
+	mouseover_tween = create_tween()
+	mouseover_tween.set_trans(Tween.TRANS_ELASTIC)
+	mouseover_tween.set_ease(Tween.EASE_OUT)
+	mouseover_tween.tween_property($Camera, "position", pos, delta_time)
+	pass
 
 
 #func _process_mouse_hover_rotation():
@@ -29,19 +47,6 @@ var proj_size = Vector2.ZERO
 	#$RotationContainer.rotation.y = _ease_tilt(tilt_factor_x) * max_rotation
 	#$RotationContainer.rotation.x = _ease_tilt(tilt_factor_y) * max_rotation
 	#pass
-
-
-func enter_state(state: String) -> void:
-	if state == "idle":
-		$AnimationPlayer.play("RESET")
-		_tween_camera_to(camera_default_pos, mouseover_anim_time)
-	elif state == "mouseover":
-		$AnimationPlayer.play("RESET")
-		_tween_camera_to(camera_mouseover_pos, mouseover_anim_time)
-	elif state == "examine":
-		$AnimationPlayer.play("examine_oscillate")
-		_tween_camera_to(camera_examine_pos, examine_anim_time)
-	pass
 
 
 #func _set_corners_in_camera():
@@ -60,17 +65,7 @@ func enter_state(state: String) -> void:
 	#pass
 
 
-func _tween_camera_to(pos: Vector3, delta_time: float) -> void:
-	if mouseover_tween != null:
-		mouseover_tween.kill()
-	mouseover_tween = create_tween()
-	mouseover_tween.set_trans(Tween.TRANS_ELASTIC)
-	mouseover_tween.set_ease(Tween.EASE_OUT)
-	mouseover_tween.tween_property($Camera, "position", pos, delta_time)
-	pass
-
-
-func _ease_tilt(tilt_factor: float) -> float:
-	var normalized = (tilt_factor * hover_speed + 1) / 2
-	var eased = ease(normalized, hover_easing)
-	return (eased * 2) - 1
+#func _ease_tilt(tilt_factor: float) -> float:
+	#var normalized = (tilt_factor * hover_speed + 1) / 2
+	#var eased = ease(normalized, hover_easing)
+	#return (eased * 2) - 1
