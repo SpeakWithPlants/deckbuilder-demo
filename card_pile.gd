@@ -35,9 +35,14 @@ func size() -> int:
 
 func _reorder() -> void:
 	for i in range(pile.size()):
-		pile[i].face_down = self.face_down
-		pile[i].target_pos = global_position
-		pile[i].target_rot = global_rotation
-		pile[i].pile_idx = i
-		pile[i].z_index = GameState.deck.size() * z_index - i
+		var card = pile[i] as CardView
+		card.face_down = self.face_down
+		var pos_data = {
+			"global_position": global_position,
+			"global_rotation": global_rotation,
+			"scale": 0.6
+		}
+		card.set_state_pos_data(CardView.CardState.FIELD, pos_data)
+		card.pile_idx = i
+		card.z_index = GameState.deck.size() * z_index - i
 	pass

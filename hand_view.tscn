@@ -18,3 +18,10 @@ face_down = false
 [node name="DrawPile" parent="." instance=ExtResource("2_b0ls8")]
 z_index = -1
 position = Vector2(1800, 873)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1920, 1080)
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
