@@ -23,6 +23,12 @@ func draw_from_top() -> CardView:
 	return card
 
 
+func remove_card(card: CardView):
+	pile.erase(card)
+	_reorder()
+	pass
+
+
 func shuffle() -> void:
 	pile.shuffle()
 	_reorder()
@@ -33,16 +39,20 @@ func size() -> int:
 	return pile.size()
 
 
+func is_empty() -> bool:
+	return pile.is_empty()
+
+
+func reposition() -> void:
+	for card in pile:
+		card.reposition()
+	pass
+
+
 func _reorder() -> void:
 	for i in range(pile.size()):
 		var card = pile[i] as CardView
 		card.face_down = self.face_down
-		var pos_data = {
-			"global_position": global_position,
-			"global_rotation": global_rotation,
-			"scale": 0.6
-		}
-		card.set_state_pos_data(CardView.CardState.FIELD, pos_data)
 		card.pile_idx = i
 		card.z_index = GameState.deck.size() * z_index - i
 	pass

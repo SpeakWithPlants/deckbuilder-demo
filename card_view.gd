@@ -1,13 +1,13 @@
 extends Node2D
 class_name CardView
 
-# 'FIELD' is the current passive position of the card, usually a card pile (hand, draw, or discard)
-# 'HOVER' is the card's position while the mouse is hovering over it
-# 'HOLD' is the card's position while the mouse is dragging it (highest priority)
-enum CardState {
-	FIELD,
+enum State {
+	DRAW,
+	HAND,
 	HOVER,
-	HOLD,
+	AIM,
+	ACTIVATE,
+	DISCARD,
 	EXAMINE
 }
 
@@ -15,7 +15,6 @@ const move_duration = 0.7
 const rotate_duration = move_duration
 const hover_scale = 1.2
 
-@export var interactable: bool = false
 @export var face_down: bool = false
 
 var pile_idx: int = 0
@@ -25,7 +24,7 @@ var target_pos: Vector2
 var target_rot: float
 var previous_z_index: int = z_index
 
-var state: CardState = CardState.FIELD:
+var state: State = State.DRAW:
 	set(value):
 		state = value
 		reposition()
@@ -36,7 +35,7 @@ var pos_queue: Dictionary = {}
 
 
 func reposition() -> void:
-	var pos_data = pos_queue[state]
+	var pos_data = pos_queue.get(state)
 	if pos_data != null:
 		var pos = pos_data.get("global_position")
 		var rot = pos_data.get("global_rotation")
@@ -45,9 +44,13 @@ func reposition() -> void:
 	pass
 
 
-func set_state_pos_data(card_state: CardState, pos_data: Dictionary):
+func set_state_pos_data(card_state: State, pos_data: Dictionary):
 	pos_queue[card_state] = pos_data
 	pass
+
+
+func is_interactable() -> bool:
+	return state in [State.HAND, State.HOVER]
 
 
 func tween_to_target_orientation() -> void:
