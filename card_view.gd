@@ -44,6 +44,10 @@ func reposition() -> void:
 	pass
 
 
+func get_state_pos_data(card_state: State) -> Dictionary:
+	return pos_queue.get(card_state)
+
+
 func set_state_pos_data(card_state: State, pos_data: Dictionary):
 	pos_queue[card_state] = pos_data
 	pass

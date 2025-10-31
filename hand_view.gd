@@ -4,6 +4,8 @@ const preferred_arc_length = PI * 60
 const min_card_arc_length = PI * 15
 const max_hand_arc_length = PI * 330
 const arc_radius = 4000.0
+const max_drift_dist = 50.0
+const aim_dist_threshold = 300.0
 
 const hover_up = preferred_arc_length / 5
 const preferred_card_angle = preferred_arc_length / arc_radius
@@ -13,6 +15,7 @@ const min_card_angle = min_card_arc_length / arc_radius
 var field_tween: Tween = null
 var hovered_cards: Array[CardView] = []
 var aiming_card: CardView = null
+var aim_dist: float = 0.0
 
 
 func _ready() -> void:
@@ -47,8 +50,10 @@ func _physics_process(_delta: float) -> void:
 			aiming_card = hovered_cards.back()
 			aiming_card.state = CardView.State.AIM
 	if Input.is_action_just_released("mouse_left"):
-		if aiming_card != null:
+		if aiming_card != null and aim_dist > aim_dist_threshold:
 			play_card(aiming_card)
+		else:
+			aiming_card.state = CardView.State.HAND
 		aiming_card = null
 	if Input.is_action_just_pressed("ui_accept"):
 		if field_tween != null:
@@ -58,11 +63,12 @@ func _physics_process(_delta: float) -> void:
 		field_tween.set_parallel(false)
 		field_tween.tween_callback(discard_hand)
 		field_tween.tween_callback(do_starting_draw).set_delay(1.0)
+	_reposition_aiming_card()
 	pass
 
 
 func _draw() -> void:
-	if aiming_card != null:
+	if aiming_card != null and aim_dist > aim_dist_threshold:
 		var mouse_pos = get_local_mouse_position()
 		draw_circle(mouse_pos, 5.0, Color.RED, true, -1.0, true)
 	pass
@@ -89,11 +95,12 @@ func discard_card() -> void:
 
 
 func play_card(card: CardView) -> void:
-	$HandPile.remove_card(card)
-	$DiscardPile.add_to_top(card)
 	# TODO need to run the card's "activation" animation here, for now just discard
-	card.state = CardView.State.DISCARD
-	_reposition_hand()
+	var play_tween = create_tween()
+	play_tween.tween_callback($HandPile.remove_card.bind(card))
+	play_tween.tween_property(card, "state", CardView.State.DISCARD, 0).set_delay(0.7)
+	play_tween.tween_callback($DiscardPile.add_to_top.bind(card))
+	play_tween.tween_callback(_reposition_hand)
 	pass
 
 
@@ -157,6 +164,20 @@ func _initialize_card(card: CardView) -> CardView:
 	$DrawPile.add_to_top(card)
 	card.state = CardView.State.DRAW
 	return card
+
+
+func _reposition_aiming_card() -> void:
+	if aiming_card == null:
+		aim_dist = 0.0
+		return
+	var pos_data = aiming_card.get_state_pos_data(CardView.State.HOVER).duplicate(true)
+	var mouse_drift = get_global_mouse_position() - pos_data.global_position
+	aim_dist = mouse_drift.length()
+	mouse_drift = mouse_drift.normalized() * min(max_drift_dist, aim_dist)
+	pos_data.global_position = pos_data.global_position + mouse_drift
+	aiming_card.set_state_pos_data(CardView.State.AIM, pos_data)
+	aiming_card.reposition()
+	pass
 
 
 func _reposition_hand() -> void:
