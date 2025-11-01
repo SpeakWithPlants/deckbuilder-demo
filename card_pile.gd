@@ -54,5 +54,4 @@ func _reorder() -> void:
 		var card = pile[i] as CardView
 		card.face_down = self.face_down
 		card.pile_idx = i
-		card.z_index = GameState.deck.size() * z_index - i
 	pass

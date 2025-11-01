@@ -28,57 +28,50 @@ var state: State = State.DRAW:
 	set(value):
 		state = value
 		reposition()
-var pos_queue: Dictionary = {}
+var state_pos_data: Dictionary = {}
 
 @onready var card = $SubViewport/Card3D
 @onready var mouse_area = $MouseArea
 
 
 func reposition() -> void:
-	var pos_data = pos_queue.get(state)
+	var pos_data = state_pos_data.get(state)
 	if pos_data != null:
 		var pos = pos_data.get("global_position")
 		var rot = pos_data.get("global_rotation")
 		var scl = pos_data.get("scale")
-		_tween_to_orientation(pos, rot, scl)
+		var z = pos_data.get("z_index")
+		_tween_to_orientation(pos, rot, scl, z)
 	pass
 
 
 func get_state_pos_data(card_state: State) -> Dictionary:
-	return pos_queue.get(card_state)
+	return state_pos_data.get(card_state)
 
 
 func set_state_pos_data(card_state: State, pos_data: Dictionary):
-	pos_queue[card_state] = pos_data
+	state_pos_data[card_state] = pos_data
 	pass
 
 
-func is_interactable() -> bool:
-	return state in [State.HAND, State.HOVER]
+func can_mouseover() -> bool:
+	var state_valid = state not in [State.DRAW, State.DISCARD, State.EXAMINE]
+	return state_valid
 
 
-func tween_to_target_orientation() -> void:
-	_tween_to_orientation(target_pos, target_rot, 1.0)
-	pass
-
-
-func tween_to_hover_orientation() -> void:
-	_tween_to_orientation(hover_pos, 0, hover_scale)
-	pass
-
-
-func _tween_to_orientation(pos: Vector2, rot = null, scl = null) -> void:
+func _tween_to_orientation(pos: Vector2, rot = null, scl = null, z = null) -> void:
 	if move_tween != null:
 		move_tween.kill()
 	move_tween = create_tween()
 	move_tween.set_ease(Tween.EASE_OUT)
 	move_tween.set_trans(Tween.TRANS_EXPO)
+	move_tween.set_parallel()
 	if pos != null:
 		move_tween.tween_property(self, "global_position", pos, move_duration)
 	if rot != null:
-		move_tween.set_parallel()
 		move_tween.tween_property(self, "global_rotation", rot, move_duration)
 	if scl != null:
-		move_tween.set_parallel()
 		move_tween.tween_property(self, "scale", Vector2.ONE * scl, move_duration)
+	if z != null:
+		move_tween.tween_property(self, "z_index", z, 0)
 	pass

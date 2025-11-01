@@ -81,6 +81,16 @@ texture = ExtResource("6_gtr7n")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, 0.19632745)
 texture = ExtResource("7_tx6sl")
 
+[node name="Title" type="Label3D" parent="RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, 2.0131369, 0.5425565)
+pixel_size = 0.02
+no_depth_test = true
+render_priority = 1
+modulate = Color(0.28118682, 0.28118688, 0.28118682, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "Test Card Label"
+font_size = 42
+
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
 size = 21.388
