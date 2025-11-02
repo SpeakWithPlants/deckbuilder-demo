@@ -83,8 +83,9 @@ func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_released("mouse_left"):
 		if aiming_card != null and valid_target:
 			play_card(aiming_card)
+		else:
+			state = State.WAIT_PLAYER
 		aiming_card = null
-		state = State.WAIT_PLAYER
 	valid_target = _get_valid_target()
 	pass
 
@@ -94,6 +95,16 @@ func _draw() -> void:
 		var mouse_pos = get_local_mouse_position()
 		draw_circle(mouse_pos, 5.0, Color.RED, true, -1.0, true)
 		draw_line(Vector2(0, field_aim_y), Vector2(1920, field_aim_y), Color.RED, -1.0, true)
+	pass
+
+
+func do_starting_draw() -> void:
+	state = State.WAIT_ANIM
+	var draw_tween = create_tween()
+	draw_tween.set_parallel(false)
+	for i in range(GameState.starting_draw):
+		draw_tween.tween_callback(draw_card).set_delay(0.1)
+	draw_tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
 	pass
 
 
@@ -118,16 +129,6 @@ func play_card(card: CardView) -> void:
 	play_tween.tween_callback($DiscardPile.add_to_top.bind(card))
 	play_tween.tween_callback(_reposition_hand)
 	play_tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
-	pass
-
-
-func do_starting_draw() -> void:
-	state = State.WAIT_ANIM
-	var draw_tween = create_tween()
-	draw_tween.set_parallel(false)
-	for i in range(GameState.starting_draw):
-		draw_tween.tween_callback(draw_card).set_delay(0.5)
-	draw_tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
 	pass
 
 
