@@ -11,8 +11,10 @@ const preferred_arc_length = PI * 60
 const min_card_arc_length = PI * 15
 const max_hand_arc_length = PI * 330
 const arc_radius = 4000.0
-const max_drift_dist = 50.0
+const max_drift_dist = 30.0
 const aim_dist_threshold = 300.0
+const aim_hand_y = 540
+const field_aim_y = 1080.0 * 3 / 5
 
 const hover_up = preferred_arc_length / 5
 const preferred_card_angle = preferred_arc_length / arc_radius
@@ -20,6 +22,7 @@ const max_arc_angle = max_hand_arc_length / arc_radius
 const min_card_angle = min_card_arc_length / arc_radius
 
 var state: State = State.WAIT_ANIM
+var valid_target: bool = false
 var field_tween: Tween = null
 var hovered_cards: Array[CardView] = []
 var aiming_card: CardView = null
@@ -76,17 +79,21 @@ func _physics_process(_delta: float) -> void:
 			if recent_hovered_card.state == CardView.State.HOVER:
 				aiming_card = recent_hovered_card
 				aiming_card.state = CardView.State.AIM
+				state = State.AIMING
 	if Input.is_action_just_released("mouse_left"):
-		if aiming_card != null and aim_dist > aim_dist_threshold:
+		if aiming_card != null and valid_target:
 			play_card(aiming_card)
 		aiming_card = null
+		state = State.WAIT_PLAYER
+	valid_target = _get_valid_target()
 	pass
 
 
 func _draw() -> void:
-	if aiming_card != null and aim_dist > aim_dist_threshold:
+	if state == State.AIMING:
 		var mouse_pos = get_local_mouse_position()
 		draw_circle(mouse_pos, 5.0, Color.RED, true, -1.0, true)
+		draw_line(Vector2(0, field_aim_y), Vector2(1920, field_aim_y), Color.RED, -1.0, true)
 	pass
 
 
@@ -119,7 +126,7 @@ func do_starting_draw() -> void:
 	var draw_tween = create_tween()
 	draw_tween.set_parallel(false)
 	for i in range(GameState.starting_draw):
-		draw_tween.tween_callback(draw_card).set_delay(0.1)
+		draw_tween.tween_callback(draw_card).set_delay(0.5)
 	draw_tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
 	pass
 
@@ -134,6 +141,14 @@ func _on_mouse_entered_card(card: CardView) -> void:
 func _on_mouse_exited_card(card: CardView) -> void:
 	hovered_cards.erase(card)
 	pass
+
+
+func _get_valid_target() -> bool:
+	if not hovered_cards.is_empty() and hovered_cards.back() != aiming_card:
+		return true
+	if get_global_mouse_position().y < field_aim_y:
+		return true
+	return false
 
 
 func _initialize_card(card: CardView) -> CardView:
@@ -167,13 +182,16 @@ func _reposition_aiming_card() -> void:
 	if aiming_card == null:
 		aim_dist = 0.0
 		return
-	# TODO raise AIM position higher when hovering over another card
-	var pos_data = aiming_card.get_state_pos_data(CardView.State.HOVER).duplicate(true)
-	var mouse_drift = get_global_mouse_position() - pos_data.global_position
-	aim_dist = mouse_drift.length()
-	mouse_drift = mouse_drift.normalized() * min(max_drift_dist, aim_dist)
-	pos_data.global_position = pos_data.global_position + mouse_drift
-	aiming_card.set_state_pos_data(CardView.State.AIM, pos_data)
+	var hover_data = aiming_card.get_state_pos_data(CardView.State.HOVER)
+	var aim_data = hover_data.duplicate(true)
+	var card_to_mouse = get_global_mouse_position() - hover_data.global_position
+	aim_dist = card_to_mouse.length()
+	if not hovered_cards.is_empty() and hovered_cards.back() != aiming_card:
+		aim_data.global_position += Vector2(card_to_mouse.x / 2, -aim_hand_y)
+	else:
+		var card_drift = card_to_mouse.normalized() * min(max_drift_dist, aim_dist)
+		aim_data.global_position = hover_data.global_position + card_drift
+	aiming_card.set_state_pos_data(CardView.State.AIM, aim_data)
 	aiming_card.reposition()
 	pass
 

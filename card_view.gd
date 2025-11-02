@@ -26,6 +26,8 @@ var previous_z_index: int = z_index
 
 var state: State = State.DRAW:
 	set(value):
+		if state == value:
+			return
 		state = value
 		reposition()
 var state_pos_data: Dictionary = {}

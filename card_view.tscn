@@ -26,6 +26,3 @@ size = Vector2i(650, 650)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="MouseArea"]
 polygon = PackedVector2Array(-104, 152, -104, -120, -48, -176, 48, -176, 104, -120, 104, 152)
-
-[node name="DragPivot" type="Marker2D" parent="."]
-position = Vector2(0, -115)
