@@ -7,31 +7,27 @@ class_name CardPile
 
 func add_to_top(card: CardView) -> void:
 	pile.push_front(card)
-	_reorder()
+	card.face_down = self.face_down
 	pass
 
 
 func add_to_bottom(card: CardView) -> void:
 	pile.push_back(card)
-	_reorder()
+	card.face_down = self.face_down
 	pass
 
 
 func draw_from_top() -> CardView:
-	var card = pile.pop_front()
-	_reorder()
-	return card
+	return pile.pop_front()
 
 
-func remove_card(card: CardView):
+func remove_card(card: CardView) -> void:
 	pile.erase(card)
-	_reorder()
 	pass
 
 
 func shuffle() -> void:
 	pile.shuffle()
-	_reorder()
 	pass
 
 
@@ -46,12 +42,4 @@ func is_empty() -> bool:
 func reposition() -> void:
 	for card in pile:
 		card.reposition()
-	pass
-
-
-func _reorder() -> void:
-	for i in range(pile.size()):
-		var card = pile[i] as CardView
-		card.face_down = self.face_down
-		card.pile_idx = i
 	pass
