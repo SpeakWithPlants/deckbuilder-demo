@@ -24,6 +24,8 @@ var state: State = State.DRAW:
 			return
 		state = value
 		reposition()
+		if card != null:
+			card.enter_state(value)
 var state_pos_data: Dictionary = {}
 
 @onready var card = $SubViewport/Card3D

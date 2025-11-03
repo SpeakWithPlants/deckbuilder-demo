@@ -7,13 +7,13 @@ const anim_trans_time = 0.45
 var camera_tween: Tween
 
 
-func enter_state(state: String) -> void:
-	if state == "idle":
-		_tween_camera_to(camera_default_pos, anim_trans_time)
-		$AnimationPlayer.play("RESET")
-	elif state == "examine":
+func enter_state(state: CardView.State) -> void:
+	if state == CardView.State.EXAMINE:
 		_tween_camera_to(camera_examine_pos, anim_trans_time)
 		$AnimationPlayer.play("examine_oscillate")
+	else:
+		_tween_camera_to(camera_default_pos, anim_trans_time)
+		$AnimationPlayer.play("RESET")
 	pass
 
 

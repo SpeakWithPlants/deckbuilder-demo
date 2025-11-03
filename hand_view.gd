@@ -3,8 +3,7 @@ class_name HandView
 
 enum State {
 	WAIT_ANIM,
-	WAIT_PLAYER,
-	AIMING,
+	WAIT_PLAYER
 }
 
 const preferred_arc_length = PI * 60
@@ -23,21 +22,22 @@ const min_card_angle = min_card_arc_length / arc_radius
 
 var state: State = State.WAIT_ANIM
 var valid_target: bool = false
-var field_tween: Tween = null
+var veil_tween: Tween = null
 var hovered_cards: Array[CardView] = []
 var aiming_card: CardView = null
+var examining_card: CardView = null
 var aim_dist: float = 0.0
 
 
 func _ready() -> void:
-	$ColorRect.z_index = GameState.deck.size() + 2
-	$ColorRect.modulate.a = 0
 	await get_tree().root.ready
 	var i = 0
 	for card in GameState.deck:
 		card = _initialize_card(card)
 		card.modulate = Color(i / (GameState.starting_draw - 1.0), 0.4, 0.6)
 		i += 1
+	$Veil.z_index = GameState.deck.size() * 3 + 1
+	$Veil.color = Color(Color.BLACK, 0.0)
 	$DrawPile.shuffle()
 	await get_tree().physics_frame
 	for card in GameState.deck:
@@ -55,43 +55,64 @@ func _process(_delta: float) -> void:
 	var str_hand = "Hand: " + str($HandPile.size())
 	var str_hovering = "Hovering: " + str(hovered_cards.size())
 	var str_aiming = "Aiming Card: " + str(aiming_card)
+	var str_examining = "Examining Card: " + str(examining_card)
+	var str_veil_z = "Veil Z: " + str($Veil.z_index)
+	var max_card_z = 0
+	for card in GameState.deck:
+		max_card_z = max(max_card_z, card.z_index)
+	var str_max_card_z = "Max Card Z: " + str(max_card_z)
 	SessionState.debug_text = str_state + "\n" \
 	+ str_hand + "\n" \
 	+ str_hovering + "\n" \
-	+ str_aiming
+	+ str_aiming + "\n" \
+	+ str_examining + "\n" \
+	+ str_veil_z + ", " + str_max_card_z
 	pass
 
 
 func _physics_process(_delta: float) -> void:
 	if state == State.WAIT_ANIM:
 		return
+	_reposition_aiming_card()
 	for card in $HandPile.pile:
-		if card == aiming_card:
-			_reposition_aiming_card()
+		if card == examining_card or card == aiming_card:
 			continue
 		if card in hovered_cards:
 			card.state = CardView.State.HOVER
 		else:
 			card.state = CardView.State.HAND
 	if Input.is_action_just_pressed("mouse_left"):
-		if not hovered_cards.is_empty():
+		if examining_card != null:
+			stop_examine_card()
+		elif not hovered_cards.is_empty():
 			var recent_hovered_card = hovered_cards.back()
 			if recent_hovered_card.state == CardView.State.HOVER:
 				aiming_card = recent_hovered_card
 				aiming_card.state = CardView.State.AIM
-				state = State.AIMING
 	if Input.is_action_just_released("mouse_left"):
-		if aiming_card != null and valid_target:
-			play_card(aiming_card)
-		else:
+		if aiming_card != null:
+			if valid_target:
+				play_card(aiming_card)
+			else:
+				state = State.WAIT_PLAYER
+			aiming_card = null
+	if Input.is_action_just_pressed("mouse_right"):
+		if examining_card != null:
+			stop_examine_card()
+		elif aiming_card != null:
+			aiming_card = null
 			state = State.WAIT_PLAYER
-		aiming_card = null
+		elif state == State.WAIT_PLAYER:
+			if not hovered_cards.is_empty():
+				var recent_hovered_card = hovered_cards.back()
+				if recent_hovered_card.state == CardView.State.HOVER:
+					start_examine_card(recent_hovered_card)
 	valid_target = _get_valid_target()
 	pass
 
 
 func _draw() -> void:
-	if state == State.AIMING:
+	if aiming_card != null:
 		var mouse_pos = get_local_mouse_position()
 		draw_circle(mouse_pos, 5.0, Color.RED, true, -1.0, true)
 		draw_line(Vector2(0, field_aim_y), Vector2(1920, field_aim_y), Color.RED, -1.0, true)
@@ -122,13 +143,31 @@ func play_card(card: CardView) -> void:
 	state = State.WAIT_ANIM
 	# TODO need to run the card's "activation" animation here, for now just discard after a
 	# short delay
-	var play_tween = create_tween()
-	play_tween.set_parallel(false)
-	play_tween.tween_callback($HandPile.remove_card.bind(card))
-	play_tween.tween_property(card, "state", CardView.State.DISCARD, 0).set_delay(0.7)
-	play_tween.tween_callback($DiscardPile.add_to_top.bind(card))
-	play_tween.tween_callback(_reposition_hand)
-	play_tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
+	var tween = create_tween()
+	tween.set_parallel(false)
+	tween.tween_callback($HandPile.remove_card.bind(card))
+	tween.tween_property(card, "state", CardView.State.DISCARD, 0).set_delay(0.7)
+	tween.tween_callback($DiscardPile.add_to_top.bind(card))
+	tween.tween_callback(_reposition_hand)
+	tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
+	pass
+
+
+func start_examine_card(card: CardView) -> void:
+	examining_card = card
+	card.state = CardView.State.EXAMINE
+	$Veil.mouse_filter = Control.MouseFilter.MOUSE_FILTER_STOP
+	veil_tween = create_tween()
+	veil_tween.tween_property($Veil, "color", Color(Color.BLACK, 0.8), 0.2)
+	pass
+
+
+func stop_examine_card() -> void:
+	examining_card = null
+	veil_tween = create_tween()
+	veil_tween.tween_property($Veil, "color", Color(Color.BLACK, 0.0), 0.2)
+	veil_tween.set_parallel(false)
+	veil_tween.tween_property($Veil, "mouse_filter", Control.MouseFilter.MOUSE_FILTER_IGNORE, 0)
 	pass
 
 
@@ -168,10 +207,10 @@ func _initialize_card(card: CardView) -> CardView:
 		"z_index": $DiscardPile.z_index
 	})
 	card.set_state_pos_data(CardView.State.EXAMINE, {
-		"global_position": get_viewport_rect().get_center(),
+		"global_position": get_viewport_rect().get_center() + Vector2.UP * hover_up,
 		"global_rotation": 0,
-		"scale": 1.0,
-		"z_index": GameState.deck.size() * 3
+		"scale": 1.5,
+		"z_index": GameState.deck.size() * 3 + 2
 	})
 	$DrawPile.add_to_top(card)
 	card.state = CardView.State.DRAW
