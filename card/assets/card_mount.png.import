@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://du3gbqisqsfvo"
-path.s3tc="res://.godot/imported/card_mount.png-2b109c7bf9aa0d06cf1a8c39b8b555f2.s3tc.ctex"
+path.s3tc="res://.godot/imported/card_mount.png-47cf8e8f7995472466d944aa80f1d961.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://card_mount.png"
-dest_files=["res://.godot/imported/card_mount.png-2b109c7bf9aa0d06cf1a8c39b8b555f2.s3tc.ctex"]
+source_file="res://card/assets/card_mount.png"
+dest_files=["res://.godot/imported/card_mount.png-47cf8e8f7995472466d944aa80f1d961.s3tc.ctex"]
 
 [params]
 

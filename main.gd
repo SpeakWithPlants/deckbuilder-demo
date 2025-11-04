@@ -1,6 +1,6 @@
 extends Control
 
-const card_view_scene = preload("res://card_view.tscn")
+const card_view_scene = preload("res://card/card_view.tscn")
 
 
 func _ready() -> void:

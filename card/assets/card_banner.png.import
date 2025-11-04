@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dc6f5p5t31hmh"
-path.s3tc="res://.godot/imported/card_banner.png-1dc809bdac51c6a2c7bca648c64c523e.s3tc.ctex"
+path.s3tc="res://.godot/imported/card_banner.png-233a1809ea97c0b1c93dab05e53dd75b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://card_banner.png"
-dest_files=["res://.godot/imported/card_banner.png-1dc809bdac51c6a2c7bca648c64c523e.s3tc.ctex"]
+source_file="res://card/assets/card_banner.png"
+dest_files=["res://.godot/imported/card_banner.png-233a1809ea97c0b1c93dab05e53dd75b.s3tc.ctex"]
 
 [params]
 

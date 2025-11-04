@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tevmavp3dyox"
-path.s3tc="res://.godot/imported/card_ghost_portrait_zephyr.png-65b039720aab1898332150dab6cfcf3f.s3tc.ctex"
+uid="uid://b0xl8q6iiecp7"
+path.s3tc="res://.godot/imported/card_description.png-1dc7e111edf64dfcf38a94c28b0920ce.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://card_ghost_portrait_zephyr.png"
-dest_files=["res://.godot/imported/card_ghost_portrait_zephyr.png-65b039720aab1898332150dab6cfcf3f.s3tc.ctex"]
+source_file="res://card/assets/card_description.png"
+dest_files=["res://.godot/imported/card_description.png-1dc7e111edf64dfcf38a94c28b0920ce.s3tc.ctex"]
 
 [params]
 

@@ -28,6 +28,8 @@ var aiming_card: CardView = null
 var examining_card: CardView = null
 var aim_dist: float = 0.0
 
+@onready var hand_pile = $HandPile
+
 
 func _ready() -> void:
 	await get_tree().root.ready
@@ -36,7 +38,6 @@ func _ready() -> void:
 		card = _initialize_card(card)
 		card.modulate = Color(i / (GameState.starting_draw - 1.0), 0.4, 0.6)
 		i += 1
-	$Veil.z_index = GameState.deck.size() * 3 + 1
 	$Veil.color = Color(Color.BLACK, 0.0)
 	$DrawPile.shuffle()
 	await get_tree().physics_frame
@@ -52,21 +53,15 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	queue_redraw()
 	var str_state = "State: " + State.keys()[state]
-	var str_hand = "Hand: " + str($HandPile.size())
+	var str_hand = "Hand: " + str(hand_pile.size())
 	var str_hovering = "Hovering: " + str(hovered_cards.size())
 	var str_aiming = "Aiming Card: " + str(aiming_card)
 	var str_examining = "Examining Card: " + str(examining_card)
-	var str_veil_z = "Veil Z: " + str($Veil.z_index)
-	var max_card_z = 0
-	for card in GameState.deck:
-		max_card_z = max(max_card_z, card.z_index)
-	var str_max_card_z = "Max Card Z: " + str(max_card_z)
 	SessionState.debug_text = str_state + "\n" \
 	+ str_hand + "\n" \
 	+ str_hovering + "\n" \
 	+ str_aiming + "\n" \
-	+ str_examining + "\n" \
-	+ str_veil_z + ", " + str_max_card_z
+	+ str_examining + "\n"
 	pass
 
 
@@ -74,7 +69,7 @@ func _physics_process(_delta: float) -> void:
 	if state == State.WAIT_ANIM:
 		return
 	_reposition_aiming_card()
-	for card in $HandPile.pile:
+	for card in hand_pile.get_children():
 		if card == examining_card or card == aiming_card:
 			continue
 		if card in hovered_cards:
@@ -107,7 +102,7 @@ func _physics_process(_delta: float) -> void:
 				var recent_hovered_card = hovered_cards.back()
 				if recent_hovered_card.state == CardView.State.HOVER:
 					start_examine_card(recent_hovered_card)
-	valid_target = _get_valid_target()
+	valid_target = _is_aiming_at_valid_target()
 	pass
 
 
@@ -133,7 +128,7 @@ func draw_card() -> void:
 	if $DrawPile.is_empty():
 		return
 	var card = $DrawPile.draw_from_top()
-	$HandPile.add_to_bottom(card)
+	hand_pile.add_to_bottom(card)
 	card.state = CardView.State.HAND
 	_reposition_hand()
 	pass
@@ -145,7 +140,6 @@ func play_card(card: CardView) -> void:
 	# short delay
 	var tween = create_tween()
 	tween.set_parallel(false)
-	tween.tween_callback($HandPile.remove_card.bind(card))
 	tween.tween_property(card, "state", CardView.State.DISCARD, 0).set_delay(0.7)
 	tween.tween_callback($DiscardPile.add_to_top.bind(card))
 	tween.tween_callback(_reposition_hand)
@@ -183,9 +177,12 @@ func _on_mouse_exited_card(card: CardView) -> void:
 	pass
 
 
-func _get_valid_target() -> bool:
+func _is_aiming_at_valid_target() -> bool:
+	if aiming_card == null:
+		return false
 	if not hovered_cards.is_empty() and hovered_cards.back() != aiming_card:
-		return true
+		var hovered_card = hovered_cards.back()
+		return aiming_card.is_valid_target(hovered_card)
 	if get_global_mouse_position().y < field_aim_y:
 		return true
 	return false
@@ -198,19 +195,19 @@ func _initialize_card(card: CardView) -> CardView:
 		"global_position": $DrawPile.global_position,
 		"global_rotation": $DrawPile.global_rotation,
 		"scale": 1.0,
-		"z_index": $DrawPile.z_index
+		"z_index": 0
 	})
 	card.set_state_pos_data(CardView.State.DISCARD, {
 		"global_position": $DiscardPile.global_position,
 		"global_rotation": $DiscardPile.global_rotation,
 		"scale": 1.0,
-		"z_index": $DiscardPile.z_index
+		"z_index": 0
 	})
 	card.set_state_pos_data(CardView.State.EXAMINE, {
 		"global_position": get_viewport_rect().get_center() + Vector2.UP * hover_up,
 		"global_rotation": 0,
 		"scale": 1.5,
-		"z_index": GameState.deck.size() * 3 + 2
+		"z_index": 1
 	})
 	$DrawPile.add_to_top(card)
 	card.state = CardView.State.DRAW
@@ -237,26 +234,26 @@ func _reposition_aiming_card() -> void:
 
 
 func _reposition_hand() -> void:
-	var hand_size = $HandPile.size()
+	var hand_size = hand_pile.size()
 	var preferred_arc_angle = preferred_card_angle * hand_size
 	var arc_angle = min(max_arc_angle, preferred_arc_angle)
 	var card_angle = max(min_card_angle, arc_angle / hand_size)
 	arc_angle = card_angle * (hand_size - 1.0)
 	for i in range(hand_size):
-		var card = $HandPile.pile[i]
+		var card = hand_pile.get_child(i)
 		var orientation = _get_card_orientation(i, hand_size, arc_angle)
 		var hand_data = {
 			"global_position": orientation.target_pos,
 			"global_rotation": orientation.target_rot,
 			"scale": 1.0,
-			"z_index": GameState.deck.size() * $HandPile.z_index - i
+			"z_index": 0
 		}
 		card.set_state_pos_data(CardView.State.HAND, hand_data)
 		var hover_data = {
 			"global_position": orientation.target_pos + Vector2.UP * hover_up,
 			"global_rotation": 0,
 			"scale": CardView.hover_scale,
-			"z_index": GameState.deck.size() * 2 - i
+			"z_index": 1
 		}
 		card.set_state_pos_data(CardView.State.HOVER, hover_data)
 		card.set_state_pos_data(CardView.State.AIM, hover_data)
@@ -265,14 +262,14 @@ func _reposition_hand() -> void:
 
 
 func _get_card_orientation(hand_idx: int, hand_size: int, arc_angle: float) -> Dictionary:
-	var hand_pos = $HandPile.global_position
+	var hand_pos = hand_pile.global_position
 	if hand_size <= 1:
 		return {
 			"target_pos": Vector2(hand_pos.x, hand_pos.y),
 			"target_rot": 0
 		}
 	var idx_weight = (hand_idx / (hand_size - 1.0)) * 2.0 - 1.0
-	var idx_angle = (arc_angle / 2) * idx_weight
+	var idx_angle = -(arc_angle / 2) * idx_weight
 	var idx_pos_x = arc_radius * sin(idx_angle)
 	var idx_pos_y = arc_radius * (1 - cos(idx_angle))
 	return {

@@ -14,8 +14,9 @@ enum State {
 const move_duration = 0.7
 const hover_scale = 1.2
 
-@export var face_down: bool = false
+@export var valid_targets: Array[String] = []
 
+var face_down: bool = false
 var move_tween: Tween = null
 
 var state: State = State.DRAW:
@@ -30,6 +31,14 @@ var state_pos_data: Dictionary = {}
 
 @onready var card = $SubViewport/Card3D
 @onready var mouse_area = $MouseArea
+
+
+func is_valid_target(target) -> bool:
+	return target != null
+
+
+func activate(_target) -> void:
+	pass
 
 
 func get_state_pos_data(card_state: State) -> Dictionary:

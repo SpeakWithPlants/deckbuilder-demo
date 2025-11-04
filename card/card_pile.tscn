@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cvpsjeimxbxxk"]
 
-[ext_resource type="Script" uid="uid://bvlt8dysacp0t" path="res://card_pile.gd" id="1_sypxo"]
+[ext_resource type="Script" uid="uid://bvlt8dysacp0t" path="res://card/card_pile.gd" id="1_sypxo"]
 
 [node name="CardPile" type="Marker2D"]
 script = ExtResource("1_sypxo")

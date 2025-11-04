@@ -1,26 +1,40 @@
 [gd_scene load_steps=3 format=3 uid="uid://ckha2f7rn6y3v"]
 
 [ext_resource type="Script" uid="uid://celpsd7cocucj" path="res://hand_view.gd" id="1_b7107"]
-[ext_resource type="PackedScene" uid="uid://cvpsjeimxbxxk" path="res://card_pile.tscn" id="2_b0ls8"]
+[ext_resource type="PackedScene" uid="uid://cvpsjeimxbxxk" path="res://card/card_pile.tscn" id="2_b0ls8"]
 
 [node name="HandView" type="Node2D"]
 script = ExtResource("1_b7107")
 
 [node name="DiscardPile" parent="." instance=ExtResource("2_b0ls8")]
-z_index = -1
 position = Vector2(120, 873)
-
-[node name="HandPile" parent="." instance=ExtResource("2_b0ls8")]
-z_index = 1
-position = Vector2(960, 833)
-face_down = false
 
 [node name="DrawPile" parent="." instance=ExtResource("2_b0ls8")]
 z_index = -1
 position = Vector2(1800, 873)
 
+[node name="HandVeil" type="ColorRect" parent="."]
+z_index = -2
+custom_minimum_size = Vector2(1920, 432)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = 1080.0
+offset_right = 1920.0
+offset_bottom = 1512.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1, -1)
+mouse_filter = 2
+color = Color(0, 0, 0, 0.46666667)
+
+[node name="HandPile" parent="." instance=ExtResource("2_b0ls8")]
+position = Vector2(960, 833)
+face_down = false
+
 [node name="Veil" type="ColorRect" parent="."]
-z_index = 1
 custom_minimum_size = Vector2(1920, 1080)
 offset_right = 1920.0
 offset_bottom = 1080.0
