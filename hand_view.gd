@@ -21,7 +21,7 @@ const max_arc_angle = max_hand_arc_length / arc_radius
 const min_card_angle = min_card_arc_length / arc_radius
 
 var state: State = State.WAIT_ANIM
-var valid_target: bool = false
+var valid_target: Variant = null
 var veil_tween: Tween = null
 var hovered_cards: Array[CardView] = []
 var aiming_card: CardView = null
@@ -68,14 +68,9 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	if state == State.WAIT_ANIM:
 		return
+	_update_valid_target()
 	_reposition_aiming_card()
-	for card in hand_pile.get_children():
-		if card == examining_card or card == aiming_card:
-			continue
-		if card in hovered_cards:
-			card.state = CardView.State.HOVER
-		else:
-			card.state = CardView.State.HAND
+	_update_hand()
 	if Input.is_action_just_pressed("mouse_left"):
 		if examining_card != null:
 			stop_examine_card()
@@ -86,7 +81,7 @@ func _physics_process(_delta: float) -> void:
 				aiming_card.state = CardView.State.AIM
 	if Input.is_action_just_released("mouse_left"):
 		if aiming_card != null:
-			if valid_target:
+			if valid_target != null:
 				play_card(aiming_card)
 			else:
 				state = State.WAIT_PLAYER
@@ -102,7 +97,6 @@ func _physics_process(_delta: float) -> void:
 				var recent_hovered_card = hovered_cards.back()
 				if recent_hovered_card.state == CardView.State.HOVER:
 					start_examine_card(recent_hovered_card)
-	valid_target = _is_aiming_at_valid_target()
 	pass
 
 
@@ -136,11 +130,10 @@ func draw_card() -> void:
 
 func play_card(card: CardView) -> void:
 	state = State.WAIT_ANIM
-	# TODO need to run the card's "activation" animation here, for now just discard after a
-	# short delay
 	var tween = create_tween()
 	tween.set_parallel(false)
-	tween.tween_property(card, "state", CardView.State.DISCARD, 0).set_delay(0.7)
+	card.activate(tween, valid_target)
+	tween.tween_property(card, "state", CardView.State.DISCARD, 0)
 	tween.tween_callback($DiscardPile.add_to_top.bind(card))
 	tween.tween_callback(_reposition_hand)
 	tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
@@ -177,15 +170,28 @@ func _on_mouse_exited_card(card: CardView) -> void:
 	pass
 
 
-func _is_aiming_at_valid_target() -> bool:
+func _update_valid_target() -> void:
 	if aiming_card == null:
-		return false
+		valid_target = null
+		return
 	if not hovered_cards.is_empty() and hovered_cards.back() != aiming_card:
 		var hovered_card = hovered_cards.back()
-		return aiming_card.is_valid_target(hovered_card)
-	if get_global_mouse_position().y < field_aim_y:
-		return true
-	return false
+		if hovered_card.get_parent() == $HandPile and aiming_card.is_valid_target(hovered_card):
+			valid_target = hovered_card
+			return
+	valid_target = null
+	pass
+
+
+func _update_hand() -> void:
+	for card in hand_pile.get_children():
+		if card == examining_card or card == aiming_card:
+			continue
+		if card in hovered_cards and (card == valid_target or aiming_card == null):
+			card.state = CardView.State.HOVER
+		else:
+			card.state = CardView.State.HAND
+	pass
 
 
 func _initialize_card(card: CardView) -> CardView:
@@ -223,7 +229,7 @@ func _reposition_aiming_card() -> void:
 	var aim_data = hover_data.duplicate(true)
 	var card_to_mouse = get_global_mouse_position() - hover_data.global_position
 	aim_dist = card_to_mouse.length()
-	if not hovered_cards.is_empty() and hovered_cards.back() != aiming_card:
+	if valid_target != null and valid_target.get_parent() == $HandPile:
 		aim_data.global_position += Vector2(card_to_mouse.x / 2, -aim_hand_y)
 	else:
 		var card_drift = card_to_mouse.normalized() * min(max_drift_dist, aim_dist)
