@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvuepjrbj56yu"]
+
+[ext_resource type="Texture2D" uid="uid://wencg2hofv6x" path="res://icon.svg" id="1_pyk27"]
+[ext_resource type="Script" uid="uid://kmbpb16u5ibg" path="res://components/card_target.gd" id="2_dh014"]
+
+[node name="DebugEnemy" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_pyk27")
+
+[node name="CardTarget" type="Node2D" parent="." node_paths=PackedStringArray("sprites")]
+script = ExtResource("2_dh014")
+sprites = [NodePath("../Sprite2D")]
+metadata/_custom_type_script = "uid://kmbpb16u5ibg"

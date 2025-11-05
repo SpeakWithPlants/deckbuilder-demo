@@ -33,9 +33,9 @@ var state_pos_data: Dictionary = {}
 @onready var mouse_area = $MouseArea
 
 
-func is_valid_target(_target: Node2D) -> bool:
+func is_valid_target(target: Node2D) -> bool:
 	# Default behavior, this should be overridden by each card script
-	return false
+	return target != null
 
 
 func activate(tween: Tween, _target: Node2D) -> void:
