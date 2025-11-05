@@ -187,7 +187,9 @@ func _update_hand() -> void:
 	for card in hand_pile.get_children():
 		if card == examining_card or card == aiming_card:
 			continue
-		if card in hovered_cards and (card == valid_target or aiming_card == null):
+		if examining_card != null:
+			card.state = CardView.State.HAND
+		elif card in hovered_cards and (card == valid_target or aiming_card == null):
 			card.state = CardView.State.HOVER
 		else:
 			card.state = CardView.State.HAND
@@ -213,7 +215,7 @@ func _initialize_card(card: CardView) -> CardView:
 		"global_position": get_viewport_rect().get_center() + Vector2.UP * hover_up,
 		"global_rotation": 0,
 		"scale": 1.5,
-		"z_index": 1
+		"z_index": 2
 	})
 	$DrawPile.add_to_top(card)
 	card.state = CardView.State.DRAW
