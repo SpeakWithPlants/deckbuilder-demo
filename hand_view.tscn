@@ -30,6 +30,15 @@ scale = Vector2(1, -1)
 mouse_filter = 2
 color = Color(0, 0, 0, 0.46666667)
 
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(1024, 432)
+offset_left = 384.0
+offset_top = 648.0
+offset_right = 1536.0
+offset_bottom = 1080.0
+mouse_filter = 2
+
 [node name="HandPile" parent="." instance=ExtResource("2_b0ls8")]
 position = Vector2(960, 833)
 face_down = false

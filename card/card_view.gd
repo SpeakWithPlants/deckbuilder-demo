@@ -11,10 +11,15 @@ enum State {
 	EXAMINE
 }
 
+enum AimingStyle {
+	FROM_HAND,
+	ANYWHERE
+}
+
 const move_duration = 0.7
 const hover_scale = 1.2
 
-@export var valid_targets: Array[String] = []
+@export var aiming_style: AimingStyle = AimingStyle.FROM_HAND
 
 var face_down: bool = false
 var move_tween: Tween = null
@@ -34,13 +39,13 @@ var state_pos_data: Dictionary = {}
 
 
 func is_valid_target(target: Node2D) -> bool:
-	# Default behavior, this should be overridden by each card script
-	return target != null
+	if aiming_style == AimingStyle.ANYWHERE:
+		return true
+	return _validate_target(target)
 
 
-func activate(tween: Tween, _target: Node2D) -> void:
-	# Default behavior, this should be overridden by each card script
-	tween.tween_interval(0.7)
+func activate(tween: Tween, target: Node2D) -> void:
+	_play_activate_animation(tween, target)
 	pass
 
 
@@ -79,4 +84,15 @@ func _tween_to_orientation(pos: Vector2, rot = null, scl = null, z = null) -> vo
 		move_tween.tween_property(self, "scale", Vector2.ONE * scl, move_duration)
 	if z != null:
 		move_tween.tween_property(self, "z_index", z, 0)
+	pass
+
+
+func _validate_target(target: Node2D) -> bool:
+	# Default behavior, this should be overridden by each card script
+	return target != null
+
+
+func _play_activate_animation(tween: Tween, _target: Node2D) -> void:
+	# Default behavior, this should be overridden by each card script
+	tween.tween_interval(0.7)
 	pass

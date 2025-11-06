@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://c34iw5o1sds0c"]
+[gd_scene load_steps=3 format=3 uid="uid://c34iw5o1sds0c"]
 
+[ext_resource type="Script" uid="uid://b0tfbq6mnbf2l" path="res://level_view.gd" id="1_cterp"]
 [ext_resource type="PackedScene" uid="uid://bvuepjrbj56yu" path="res://debug/debug_enemy.tscn" id="1_s67g3"]
 
 [node name="LevelView" type="Node2D"]
+script = ExtResource("1_cterp")
 
 [node name="DebugEnemy" parent="." instance=ExtResource("1_s67g3")]
 position = Vector2(1410, 560)
