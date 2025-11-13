@@ -26,6 +26,8 @@ var hovered_cards: Array[CardView] = []
 var aiming_card: CardView = null
 var examining_card: CardView = null
 
+var r = INF
+
 @onready var hand_pile = $HandPile
 @onready var hand_rect = $ReferenceRect
 
@@ -53,7 +55,7 @@ func _ready() -> void:
 	pass
 
 
-func _process(_delta: float) -> void:
+func _update_debug() -> void:
 	var str_state = "State: " + State.keys()[state]
 	var str_hand = "Hand: " + str(hand_pile.size())
 	var str_hovering = "Hovering: " + str(hovered_cards.size())
@@ -61,7 +63,9 @@ func _process(_delta: float) -> void:
 	var str_examining = "Examining Card: " + str(examining_card)
 	var str_target = "Valid Target: " + str(valid_target)
 	var str_mouse_pos = "Mouse Position: " + str(get_global_mouse_position())
-	var str_hand_rect = "Hand Rect: " + str(hand_rect.get_rect())
+	if aiming_card != null:
+		r = aiming_card.aim_velocity.x
+	var str_card_debug = "Card Debug: (%.1f)" % [r]
 	SessionState.debug_text = str_state + "\n" \
 	+ str_hand + "\n" \
 	+ str_hovering + "\n" \
@@ -69,15 +73,24 @@ func _process(_delta: float) -> void:
 	+ str_examining + "\n" \
 	+ str_target + "\n" \
 	+ str_mouse_pos + "\n" \
-	+ str_hand_rect
+	+ str_card_debug
+	queue_redraw()
 	pass
 
 
-func _physics_process(_delta: float) -> void:
+func _draw() -> void:
+	if aiming_card != null:
+		var aim_data = aiming_card.get_state_pos_data(CardView.State.AIM)
+		var dot_pos = Vector2(aim_data.global_position.x, 20.0)
+		draw_circle(dot_pos, 5.0, Color.RED, true, -1.0, true)
+	pass
+
+
+func _process(_delta: float) -> void:
+	_update_debug()
 	if state == State.WAIT_ANIM:
 		return
 	_update_valid_target()
-	_reposition_aiming_card()
 	_update_hand()
 	if Input.is_action_just_pressed("mouse_left"):
 		if examining_card != null:
@@ -86,6 +99,7 @@ func _physics_process(_delta: float) -> void:
 			var recent_hovered_card = hovered_cards.back()
 			if recent_hovered_card.state == CardView.State.HOVER:
 				aiming_card = recent_hovered_card
+				_reposition_aiming_card()
 				aiming_card.state = CardView.State.AIM
 	if Input.is_action_just_released("mouse_left"):
 		if aiming_card != null:
@@ -105,6 +119,7 @@ func _physics_process(_delta: float) -> void:
 				var recent_hovered_card = hovered_cards.back()
 				if recent_hovered_card.state == CardView.State.HOVER:
 					start_examine_card(recent_hovered_card)
+	_reposition_aiming_card()
 	pass
 
 

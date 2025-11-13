@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://tevmavp3dyox" path="res://card/assets/card_ghost_portrait_zephyr.png" id="9_ns8ee"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_po74q"]
-viewport_path = NodePath("SubViewport")
+viewport_path = NodePath("Viewport3D")
 
 [sub_resource type="Animation" id="Animation_03v04"]
 length = 0.001
@@ -56,7 +56,7 @@ _data = {
 script = ExtResource("1_po74q")
 
 [node name="Node2D" type="Sprite2D" parent="."]
-scale = Vector2(0.6, 0.6)
+scale = Vector2(0.5, 0.5)
 texture = SubResource("ViewportTexture_po74q")
 
 [node name="MouseArea" type="Area2D" parent="."]
@@ -64,48 +64,47 @@ texture = SubResource("ViewportTexture_po74q")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="MouseArea"]
 polygon = PackedVector2Array(-104, 152, -104, -120, -48, -167, 48, -167, 104, -120, 104, 152)
 
-[node name="SubViewport" type="SubViewport" parent="."]
-own_world_3d = true
+[node name="Viewport3D" type="SubViewport" parent="."]
 transparent_bg = true
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(650, 650)
+size = Vector2i(1920, 1080)
 
-[node name="Card3D" type="Node3D" parent="SubViewport"]
+[node name="Card3D" type="Node3D" parent="Viewport3D"]
 script = ExtResource("2_ea53f")
 
-[node name="RotationContainer" type="Node3D" parent="SubViewport/Card3D"]
+[node name="RotationContainer" type="Node3D" parent="Viewport3D/Card3D"]
 
-[node name="Base" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.35315037)
+[node name="Base" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -1.287704)
 texture = ExtResource("3_l1qfo")
 
-[node name="Banner" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, -0.6200094, 0.4979756)
+[node name="Banner" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, -0.6200094, -0.43657804)
 texture = ExtResource("4_r6t3b")
 
-[node name="Mount" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.19183612)
+[node name="Mount" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -1.1263897)
 texture = ExtResource("5_rbpd2")
 
-[node name="Plaque" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.10746884)
+[node name="Plaque" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -1.0420225)
 texture = ExtResource("6_td3it")
 
-[node name="InkIcon" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
+[node name="InkIcon" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.887704)
 texture = ExtResource("7_hqvqk")
 
-[node name="HealthIcon" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
+[node name="HealthIcon" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.887704)
 texture = ExtResource("8_rnhns")
 
-[node name="Portrait" type="Sprite3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, 0.19632745)
+[node name="Portrait" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, -0.7382262)
 texture = ExtResource("9_ns8ee")
 
-[node name="Title" type="Label3D" parent="SubViewport/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, 2.0131369, 0.5425565)
+[node name="Title" type="Label3D" parent="Viewport3D/Card3D/RotationContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, 2.0131369, -0.3919971)
 pixel_size = 0.02
 no_depth_test = true
 render_priority = 1
@@ -114,11 +113,12 @@ outline_modulate = Color(0, 0, 0, 0)
 text = "Test Card Label"
 font_size = 42
 
-[node name="Camera" type="Camera3D" parent="SubViewport/Card3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
-size = 21.388
+[node name="Camera" type="Camera3D" parent="Viewport3D/Card3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.065447)
+fov = 90.0
+size = 28.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewport/Card3D"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Viewport3D/Card3D"]
 libraries = {
 &"": SubResource("AnimationLibrary_03v04")
 }
