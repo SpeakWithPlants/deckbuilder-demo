@@ -52,6 +52,12 @@ var velocity: Vector2 = Vector2.ZERO
 @onready var mouse_area = $MouseArea
 
 
+func _process(delta: float) -> void:
+	_update_physics(delta)
+	_update_3d_rotation()
+	pass
+
+
 func is_valid_target(target: Node2D) -> bool:
 	if aiming_style == AimingStyle.ANYWHERE:
 		return true
@@ -135,7 +141,15 @@ func _update_physics(delta) -> void:
 
 
 func _update_3d_rotation() -> void:
-	
+	var pos = mass_pos - destination_pos
+	var scaling_factor = 6
+	var rot = Vector2(sign(pos.y), sign(pos.x)) * PI / (2 * scaling_factor)
+	if abs(pos.x) < radius:
+		rot.x = asin(pos.y / sqrt(pow(radius, 2) - pow(pos.x, 2))) / scaling_factor
+	if abs(pos.y) < radius:
+		rot.y = asin(pos.x / sqrt(pow(radius, 2) - pow(pos.y, 2))) / scaling_factor
+	rotator_3d.rotation.x = rot.x
+	rotator_3d.rotation.y = rot.y
 	pass
 
 

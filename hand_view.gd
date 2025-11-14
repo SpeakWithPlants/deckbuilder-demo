@@ -63,17 +63,13 @@ func _update_debug() -> void:
 	var str_examining = "Examining Card: " + str(examining_card)
 	var str_target = "Valid Target: " + str(valid_target)
 	var str_mouse_pos = "Mouse Position: " + str(get_global_mouse_position())
-	if aiming_card != null:
-		r = aiming_card.aim_velocity.x
-	var str_card_debug = "Card Debug: (%.1f)" % [r]
 	SessionState.debug_text = str_state + "\n" \
 	+ str_hand + "\n" \
 	+ str_hovering + "\n" \
 	+ str_aiming + "\n" \
 	+ str_examining + "\n" \
 	+ str_target + "\n" \
-	+ str_mouse_pos + "\n" \
-	+ str_card_debug
+	+ str_mouse_pos
 	queue_redraw()
 	pass
 
