@@ -76,35 +76,34 @@ script = ExtResource("2_ea53f")
 [node name="RotationContainer" type="Node3D" parent="Viewport3D/Card3D"]
 
 [node name="Base" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -1.287704)
 texture = ExtResource("3_l1qfo")
 
 [node name="Banner" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, -0.6200094, -0.43657804)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 texture = ExtResource("4_r6t3b")
 
 [node name="Mount" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -1.1263897)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.07178879)
 texture = ExtResource("5_rbpd2")
 
 [node name="Plaque" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -1.0420225)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.105635166)
 texture = ExtResource("6_td3it")
 
 [node name="InkIcon" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.887704)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.27611256)
 texture = ExtResource("7_hqvqk")
 
 [node name="HealthIcon" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.887704)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.27611256)
 texture = ExtResource("8_rnhns")
 
 [node name="Portrait" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, -0.7382262)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5523906)
 texture = ExtResource("9_ns8ee")
 
 [node name="Title" type="Label3D" parent="Viewport3D/Card3D/RotationContainer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, 2.0131369, -0.3919971)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.62, 1.2)
 pixel_size = 0.02
 no_depth_test = true
 render_priority = 1
@@ -114,7 +113,7 @@ text = "Test Card Label"
 font_size = 42
 
 [node name="Camera" type="Camera3D" parent="Viewport3D/Card3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.065447)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14.250328)
 fov = 90.0
 size = 28.0
 
