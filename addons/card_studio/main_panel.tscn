@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://c1u3hpnspuhcl"]
+
+[ext_resource type="Script" uid="uid://cobqdc7hkw1ol" path="res://addons/card_studio/main_panel.gd" id="1_rvv7q"]
+[ext_resource type="PackedScene" uid="uid://by3hxdisgs3ho" path="res://card/card_model.tscn" id="2_rvv7q"]
+
+[node name="MainPanel" type="HSplitContainer" unique_id=1564602226]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+split_offsets = PackedInt32Array(512)
+dragging_enabled = false
+split_offset = 512
+script = ExtResource("1_rvv7q")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1088517541]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1621349695]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="CardModel" parent="SubViewportContainer/SubViewport" unique_id=1433374661 instance=ExtResource("2_rvv7q")]
+unique_name_in_owner = true
+title = "New Card"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1313150155]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1390742378]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=2104039205]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=74222044]
+layout_mode = 2
+text = "Card Type"
+
+[node name="TypeEdit" type="OptionButton" parent="ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=949796986]
+unique_name_in_owner = true
+layout_mode = 2
+item_count = 2
+popup/item_0/text = "UNIT"
+popup/item_0/id = 0
+popup/item_1/text = "INSTANT"
+popup/item_1/id = 1
+
+[node name="TitleEdit" type="LineEdit" parent="ScrollContainer/VBoxContainer" unique_id=312044414]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Card"
+placeholder_text = "Every card needs a title..."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=399466540]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1696912789]
+layout_mode = 2
+text = "Card Cost"
+
+[node name="CostEdit" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1089929898]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=986848129]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1342143360]
+layout_mode = 2
+text = "Card Health"
+
+[node name="HealthEdit" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=414220608]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+allow_greater = true
+allow_lesser = true
+
+[connection signal="text_changed" from="ScrollContainer/VBoxContainer/TitleEdit" to="." method="_on_title_edit_text_changed"]
+[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxContainer/CostEdit" to="." method="_on_cost_edit_value_changed"]
+[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxContainer2/HealthEdit" to="." method="_on_health_edit_value_changed"]

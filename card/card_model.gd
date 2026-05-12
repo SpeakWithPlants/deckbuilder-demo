@@ -1,9 +1,24 @@
+@tool
 extends Node3D
+class_name CardModel
 
 const anim_trans_time = 0.45
 const radius: float = 50.0
 const gravity: float = 8000.0
 const friction: float = 5.5
+
+@export var title: String = "":
+	set(value):
+		title = value
+		%Title.text = value
+@export var cost: int = 0:
+	set(value):
+		cost = value
+		%Cost.text = str(value)
+@export var health: int = 0:
+	set(value):
+		health = value
+		%Health.text = str(value)
 
 @export var aim_diff_vector: Vector2 = Vector2.ZERO
 
