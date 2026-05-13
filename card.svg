@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="66.991547mm"
+   height="97.464142mm"
+   viewBox="0 0 66.991547 97.464142"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="card.svg"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   inkscape:export-filename="card.png"
+   inkscape:export-xdpi="6.0476189"
+   inkscape:export-ydpi="6.0476189"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0267829"
+     inkscape:cx="28.243556"
+     inkscape:cy="245.91372"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1"
+     inkscape:clip-to-page="false"
+     inkscape:export-bgcolor="#ffffff49" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="swatch8"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#8da5f3;stop-opacity:1;"
+         offset="0"
+         id="stop8" />
+    </linearGradient>
+    <filter
+       id="mask-powermask-path-effect9_inverse"
+       inkscape:label="filtermask-powermask-path-effect9"
+       style="color-interpolation-filters:sRGB"
+       height="100"
+       width="100"
+       x="-50"
+       y="-50">
+      <feColorMatrix
+         id="mask-powermask-path-effect9_primitive1"
+         values="1"
+         type="saturate"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         id="mask-powermask-path-effect9_primitive2"
+         values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0 "
+         in="fbSourceGraphic" />
+    </filter>
+  </defs>
+  <path
+     id="rect1"
+     style="opacity:1;fill:#6393ff;stroke:#6393ff;stroke-width:0.529167;stroke-opacity:1;fill-opacity:1"
+     d="M 16.40365 0.26458333 C 7.4626481 0.26458333 0.26458333 7.4626481 0.26458333 16.40365 L 0.26458333 81.060685 C 0.26458333 90.001687 7.4626481 97.199752 16.40365 97.199752 L 50.58761 97.199752 C 59.528612 97.199752 66.726676 90.001687 66.726676 81.060685 L 66.726676 16.40365 C 66.726676 7.4626481 59.528612 0.26458333 50.58761 0.26458333 L 16.40365 0.26458333 z M 28.249438 20.428727 A 4.1260001 4.1260001 0 0 1 32.092615 22.930383 A 4.1260001 4.1260001 0 0 1 29.925305 28.346073 C 23.580986 31.0648 18.577836 36.623488 16.757633 43.220101 C 13.863221 53.709843 19.734079 65.483065 30.355253 68.242863 C 38.940356 70.473612 48.552721 65.602154 50.616032 56.91849 C 52.202582 50.241349 48.340614 42.779726 41.614514 41.401607 C 36.853388 40.426092 31.52959 43.263253 30.811039 47.991386 C 30.596867 49.400678 30.98764 51.126002 31.772738 52.306368 C 32.518622 53.427773 33.398004 53.996584 34.610807 54.112976 A 4.1260001 4.1260001 0 0 1 33.332849 49.857939 C 33.856739 48.465785 35.349393 46.814484 37.144503 46.418872 C 38.939626 46.023268 40.283732 46.593695 41.206787 47.130457 C 43.052919 48.203912 44.165926 49.140674 44.718717 51.773067 C 45.419252 55.109097 43.733288 58.32677 41.621232 60.029411 C 39.509177 61.732052 37.019182 62.543938 34.356559 62.40601 C 30.260794 62.193839 26.870635 59.836644 24.900806 56.875081 C 22.930963 53.913511 22.109659 50.319314 22.651847 46.751668 C 24.1533 36.8721 34.234539 31.467566 43.270227 33.318896 C 54.933097 35.708524 61.246927 47.881981 58.646549 58.825867 C 55.441075 72.316477 41.131716 79.569368 28.279928 76.229972 C 12.938143 72.243572 4.73132 55.783841 8.803597 41.025403 C 9.4346327 38.738414 10.326677 36.558405 11.447363 34.518306 C 14.809287 28.39793 20.211918 23.530652 26.673824 20.761523 A 4.1260001 4.1260001 0 0 1 28.249438 20.428727 z " />
+</svg>

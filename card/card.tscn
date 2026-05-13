@@ -55,9 +55,6 @@ _data = {
 
 [node name="Card" type="Node2D" unique_id=1123613253]
 script = ExtResource("1_ags6k")
-title = null
-cost = null
-health = null
 
 [node name="Node2D" type="Sprite2D" parent="." unique_id=876562659]
 scale = Vector2(0.5, 0.5)
@@ -75,7 +72,7 @@ world_3d = SubResource("World3D_ags6k")
 transparent_bg = true
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(1920, 1080)
+size = Vector2i(1080, 1080)
 
 [node name="CardModel" type="Node3D" parent="Viewport3D" unique_id=1911353696]
 unique_name_in_owner = true

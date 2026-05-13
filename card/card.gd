@@ -1,4 +1,5 @@
 @tool
+@icon("res://card.png")
 extends Node2D
 class_name Card
 
