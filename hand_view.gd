@@ -22,9 +22,9 @@ var state: State = State.WAIT_ANIM
 var hovered_targets: Array[Node2D] = []
 var valid_target: Node2D = null
 var veil_tween: Tween = null
-var hovered_cards: Array[CardView] = []
-var aiming_card: CardView = null
-var examining_card: CardView = null
+var hovered_cards: Array[Card] = []
+var aiming_card: Card = null
+var examining_card: Card = null
 
 var r = INF
 
@@ -41,7 +41,7 @@ func _ready() -> void:
 		card.modulate = Color(i / (GameState.starting_draw - 1.0), 0.4, 0.6)
 		if i % 2 == 0:
 			card.modulate = Color.WHITE
-			card.aiming_style = CardView.AimingStyle.ANYWHERE
+			card.aiming_style = Card.AimingStyle.ANYWHERE
 		i += 1
 	$Veil.color = Color(Color.BLACK, 0.0)
 	$DrawPile.shuffle()
@@ -76,7 +76,7 @@ func _update_debug() -> void:
 
 func _draw() -> void:
 	if aiming_card != null:
-		var aim_data = aiming_card.get_state_pos_data(CardView.State.AIM)
+		var aim_data = aiming_card.get_state_pos_data(Card.State.AIM)
 		var dot_pos = Vector2(aim_data.global_position.x, 20.0)
 		draw_circle(dot_pos, 5.0, Color.RED, true, -1.0, true)
 	pass
@@ -93,10 +93,10 @@ func _process(_delta: float) -> void:
 			stop_examine_card()
 		elif not hovered_cards.is_empty():
 			var recent_hovered_card = hovered_cards.back()
-			if recent_hovered_card.state == CardView.State.HOVER:
+			if recent_hovered_card.state == Card.State.HOVER:
 				aiming_card = recent_hovered_card
 				_reposition_aiming_card()
-				aiming_card.state = CardView.State.AIM
+				aiming_card.state = Card.State.AIM
 	if Input.is_action_just_released("mouse_left"):
 		if aiming_card != null:
 			if valid_target != null:
@@ -113,7 +113,7 @@ func _process(_delta: float) -> void:
 		elif state == State.WAIT_PLAYER:
 			if not hovered_cards.is_empty():
 				var recent_hovered_card = hovered_cards.back()
-				if recent_hovered_card.state == CardView.State.HOVER:
+				if recent_hovered_card.state == Card.State.HOVER:
 					start_examine_card(recent_hovered_card)
 	_reposition_aiming_card()
 	pass
@@ -140,26 +140,26 @@ func draw_card() -> void:
 		return
 	var card = $DrawPile.draw_from_top()
 	hand_pile.add_to_bottom(card)
-	card.state = CardView.State.HAND
+	card.state = Card.State.HAND
 	_reposition_hand()
 	pass
 
 
-func play_card(card: CardView) -> void:
+func play_card(card: Card) -> void:
 	state = State.WAIT_ANIM
 	var tween = create_tween()
 	tween.set_parallel(false)
 	card.activate(tween, valid_target)
-	tween.tween_property(card, "state", CardView.State.DISCARD, 0)
+	tween.tween_property(card, "state", Card.State.DISCARD, 0)
 	tween.tween_callback($DiscardPile.add_to_top.bind(card))
 	tween.tween_callback(_reposition_hand)
 	tween.tween_property(self, "state", State.WAIT_PLAYER, 0)
 	pass
 
 
-func start_examine_card(card: CardView) -> void:
+func start_examine_card(card: Card) -> void:
 	examining_card = card
-	card.state = CardView.State.EXAMINE
+	card.state = Card.State.EXAMINE
 	$Veil.mouse_filter = Control.MouseFilter.MOUSE_FILTER_STOP
 	veil_tween = create_tween()
 	veil_tween.tween_property($Veil, "color", Color(Color.BLACK, 0.8), 0.2)
@@ -175,14 +175,14 @@ func stop_examine_card() -> void:
 	pass
 
 
-func _on_mouse_entered_card(card: CardView) -> void:
+func _on_mouse_entered_card(card: Card) -> void:
 	if state == State.WAIT_ANIM:
 		return
 	hovered_cards.append(card)
 	pass
 
 
-func _on_mouse_exited_card(card: CardView) -> void:
+func _on_mouse_exited_card(card: Card) -> void:
 	hovered_cards.erase(card)
 	pass
 
@@ -192,7 +192,7 @@ func _update_valid_target() -> void:
 		valid_target = null
 		return
 	var mouse_pos = get_global_mouse_position()
-	if aiming_card.aiming_style == CardView.AimingStyle.ANYWHERE:
+	if aiming_card.aiming_style == Card.AimingStyle.ANYWHERE:
 		if not hand_rect.get_rect().has_point(mouse_pos):
 			valid_target = SessionState.level_view
 		else:
@@ -216,40 +216,40 @@ func _update_hand() -> void:
 	for card in hand_pile.get_children():
 		if card == examining_card or card == aiming_card:
 			continue
-		if aiming_card != null and aiming_card.aiming_style == CardView.AimingStyle.ANYWHERE:
+		if aiming_card != null and aiming_card.aiming_style == Card.AimingStyle.ANYWHERE:
 			continue
 		if examining_card != null:
-			card.state = CardView.State.HAND
+			card.state = Card.State.HAND
 		elif card in hovered_cards and (card == valid_target or aiming_card == null):
-			card.state = CardView.State.HOVER
+			card.state = Card.State.HOVER
 		else:
-			card.state = CardView.State.HAND
+			card.state = Card.State.HAND
 	pass
 
 
-func _initialize_card(card: CardView) -> CardView:
+func _initialize_card(card: Card) -> Card:
 	card.global_position = $DrawPile.global_position
 	add_child(card)
-	card.set_state_pos_data(CardView.State.DRAW, {
+	card.set_state_pos_data(Card.State.DRAW, {
 		"global_position": $DrawPile.global_position,
 		"global_rotation": $DrawPile.global_rotation,
 		"scale": 1.0,
 		"z_index": 0
 	})
-	card.set_state_pos_data(CardView.State.DISCARD, {
+	card.set_state_pos_data(Card.State.DISCARD, {
 		"global_position": $DiscardPile.global_position,
 		"global_rotation": $DiscardPile.global_rotation,
 		"scale": 1.0,
 		"z_index": 0
 	})
-	card.set_state_pos_data(CardView.State.EXAMINE, {
+	card.set_state_pos_data(Card.State.EXAMINE, {
 		"global_position": get_viewport_rect().get_center() + Vector2.UP * hover_up,
 		"global_rotation": 0,
 		"scale": 1.5,
 		"z_index": 2
 	})
 	$DrawPile.add_to_top(card)
-	card.state = CardView.State.DRAW
+	card.state = Card.State.DRAW
 	card.z_index = $DrawPile.size()
 	return card
 
@@ -257,19 +257,19 @@ func _initialize_card(card: CardView) -> CardView:
 func _reposition_aiming_card() -> void:
 	if aiming_card == null:
 		return
-	var hover_data = aiming_card.get_state_pos_data(CardView.State.HOVER)
+	var hover_data = aiming_card.get_state_pos_data(Card.State.HOVER)
 	var aim_data = hover_data.duplicate(true)
 	var mouse_pos = get_global_mouse_position()
 	var card_to_mouse = mouse_pos - hover_data.global_position
 	var aim_dist = card_to_mouse.length()
 	var card_drift = card_to_mouse.normalized() * min(max_drift_dist, aim_dist)
 	aim_data.global_position = hover_data.global_position + card_drift
-	if aiming_card.aiming_style == CardView.AimingStyle.ANYWHERE:
+	if aiming_card.aiming_style == Card.AimingStyle.ANYWHERE:
 		if not hand_rect.get_rect().has_point(mouse_pos):
 			aim_data.global_position = mouse_pos
-	elif valid_target is CardView:
+	elif valid_target is Card:
 		aim_data.global_position += Vector2(card_to_mouse.x / 2, -aim_hand_y)
-	aiming_card.set_state_pos_data(CardView.State.AIM, aim_data)
+	aiming_card.set_state_pos_data(Card.State.AIM, aim_data)
 	aiming_card.reposition()
 	pass
 
@@ -289,15 +289,15 @@ func _reposition_hand() -> void:
 			"scale": 1.0,
 			"z_index": 0
 		}
-		card.set_state_pos_data(CardView.State.HAND, hand_data)
+		card.set_state_pos_data(Card.State.HAND, hand_data)
 		var hover_data = {
 			"global_position": orientation.target_pos + Vector2.UP * hover_up,
 			"global_rotation": 0,
-			"scale": CardView.hover_scale,
+			"scale": Card.hover_scale,
 			"z_index": 1
 		}
-		card.set_state_pos_data(CardView.State.HOVER, hover_data)
-		card.set_state_pos_data(CardView.State.AIM, hover_data)
+		card.set_state_pos_data(Card.State.HOVER, hover_data)
+		card.set_state_pos_data(Card.State.AIM, hover_data)
 		card.reposition()
 	pass
 

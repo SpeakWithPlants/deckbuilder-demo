@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckha2f7rn6y3v"]
+[gd_scene format=3 uid="uid://ckha2f7rn6y3v"]
 
 [ext_resource type="Script" uid="uid://celpsd7cocucj" path="res://hand_view.gd" id="1_b7107"]
-[ext_resource type="PackedScene" uid="uid://cvpsjeimxbxxk" path="res://card/card_pile.tscn" id="2_b0ls8"]
+[ext_resource type="PackedScene" uid="uid://cvpsjeimxbxxk" path="res://card_pile.tscn" id="2_b0ls8"]
 
 [node name="HandView" type="Node2D"]
 script = ExtResource("1_b7107")

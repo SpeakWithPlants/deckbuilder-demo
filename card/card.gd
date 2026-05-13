@@ -1,5 +1,5 @@
 extends Node2D
-class_name CardView
+class_name Card
 
 enum State {
 	DRAW,
@@ -50,8 +50,8 @@ var acceleration: Vector2 = Vector2.ZERO
 var velocity: Vector2 = Vector2.ZERO
 var rotation_tween: Tween = null
 
-@onready var card = $Viewport3D/Card3D
-@onready var rotator_3d = $Viewport3D/Card3D/RotationContainer
+@onready var card = $%Card3D
+@onready var rotator_3d = $%RotationContainer
 @onready var mouse_area = $MouseArea
 
 
@@ -145,6 +145,8 @@ func _update_physics(delta) -> void:
 
 
 func _update_3d_rotation2() -> void:
+	if destination_pos == null:
+		return
 	var pos = mass_pos - destination_pos
 	var rot = Vector3.ZERO
 	rot.x = max_rotation.x * _smooth_rotation(pos.y / radius)
@@ -180,11 +182,11 @@ func _smooth_rotation(rot: float) -> float:
 
 
 func _validate_target(target: Node2D) -> bool:
-	# Default behavior, this should be overridden by each card script
+	# Default behavior, this should be overridden depending on the card
 	return target != null
 
 
 func _play_activate_animation(tween: Tween, _target: Node2D) -> void:
-	# Default behavior, this should be overridden by each card script
+	# Default behavior, this should be overridden depending on the card
 	tween.tween_interval(0.7)
 	pass

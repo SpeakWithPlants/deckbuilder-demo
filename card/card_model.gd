@@ -10,15 +10,18 @@ const friction: float = 5.5
 @export var title: String = "":
 	set(value):
 		title = value
-		%Title.text = value
+		if has_node("%Title"):
+			%Title.text = value
 @export var cost: int = 0:
 	set(value):
 		cost = value
-		%Cost.text = str(value)
+		if has_node("%Cost"):
+			%Cost.text = str(value)
 @export var health: int = 0:
 	set(value):
 		health = value
-		%Health.text = str(value)
+		if has_node("%Health"):
+			%Health.text = str(value)
 
 @export var aim_diff_vector: Vector2 = Vector2.ZERO
 
@@ -47,8 +50,8 @@ func _ready() -> void:
 	pass
 
 
-func enter_state(state: CardView.State) -> void:
-	if state == CardView.State.EXAMINE:
+func enter_state(state: Card.State) -> void:
+	if state == Card.State.EXAMINE:
 		_tween_camera_to(camera_examine_pos, anim_trans_time)
 		$AnimationPlayer.play("examine_oscillate")
 	else:

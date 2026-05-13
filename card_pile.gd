@@ -4,20 +4,20 @@ class_name CardPile
 @export var face_down: bool = true
 
 
-func add_to_top(card: CardView) -> void:
+func add_to_top(card: Card) -> void:
 	card.reparent(self)
 	card.face_down = self.face_down
 	pass
 
 
-func add_to_bottom(card: CardView) -> void:
+func add_to_bottom(card: Card) -> void:
 	card.reparent(self)
 	move_child(card, 0)
 	card.face_down = self.face_down
 	pass
 
 
-func draw_from_top() -> CardView:
+func draw_from_top() -> Card:
 	return get_children().back()
 
 

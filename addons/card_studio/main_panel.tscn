@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://c1u3hpnspuhcl"]
 
 [ext_resource type="Script" uid="uid://cobqdc7hkw1ol" path="res://addons/card_studio/main_panel.gd" id="1_rvv7q"]
-[ext_resource type="PackedScene" uid="uid://by3hxdisgs3ho" path="res://card/card_model.tscn" id="2_rvv7q"]
 
 [node name="MainPanel" type="HSplitContainer" unique_id=1564602226]
 anchors_preset = 15
@@ -15,18 +14,15 @@ dragging_enabled = false
 split_offset = 512
 script = ExtResource("1_rvv7q")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1088517541]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1420310367]
 layout_mode = 2
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1621349695]
+[node name="3DViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1190205616]
+unique_name_in_owner = true
 own_world_3d = true
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 4
-
-[node name="CardModel" parent="SubViewportContainer/SubViewport" unique_id=1433374661 instance=ExtResource("2_rvv7q")]
-unique_name_in_owner = true
-title = "New Card"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1313150155]
 layout_mode = 2
@@ -34,14 +30,22 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1390742378]
 layout_mode = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=2104039205]
+[node name="FileNameLabel" type="Label" parent="ScrollContainer/VBoxContainer" unique_id=1462381202]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=74222044]
+[node name="ResetButton" type="Button" parent="ScrollContainer/VBoxContainer" unique_id=1536249289]
+layout_mode = 2
+text = "Reset Card"
+
+[node name="HBoxType" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=2104039205]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxType" unique_id=74222044]
 layout_mode = 2
 text = "Card Type"
 
-[node name="TypeEdit" type="OptionButton" parent="ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=949796986]
+[node name="TypeEdit" type="OptionButton" parent="ScrollContainer/VBoxContainer/HBoxType" unique_id=949796986]
 unique_name_in_owner = true
 layout_mode = 2
 item_count = 2
@@ -56,34 +60,53 @@ layout_mode = 2
 text = "New Card"
 placeholder_text = "Every card needs a title..."
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=399466540]
+[node name="HBoxCost" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=399466540]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1696912789]
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxCost" unique_id=1696912789]
 layout_mode = 2
 text = "Card Cost"
 
-[node name="CostEdit" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1089929898]
+[node name="CostEdit" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxCost" unique_id=1089929898]
 unique_name_in_owner = true
 layout_mode = 2
 rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=986848129]
+[node name="HBoxHealth" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=986848129]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1342143360]
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/HBoxHealth" unique_id=1342143360]
 layout_mode = 2
 text = "Card Health"
 
-[node name="HealthEdit" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=414220608]
+[node name="HealthEdit" type="SpinBox" parent="ScrollContainer/VBoxContainer/HBoxHealth" unique_id=414220608]
 unique_name_in_owner = true
 layout_mode = 2
 rounded = true
 allow_greater = true
 allow_lesser = true
 
+[node name="HBoxSave" type="HBoxContainer" parent="ScrollContainer/VBoxContainer" unique_id=1979640865]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="ScrollContainer/VBoxContainer/HBoxSave" unique_id=1336892728]
+layout_mode = 2
+text = "Save"
+
+[node name="SaveAsButton" type="Button" parent="ScrollContainer/VBoxContainer/HBoxSave" unique_id=203457874]
+layout_mode = 2
+text = "Save As..."
+
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1687590529]
+oversampling_override = 1.0
+initial_position = 1
+display_mode = 1
+
 [connection signal="text_changed" from="ScrollContainer/VBoxContainer/TitleEdit" to="." method="_on_title_edit_text_changed"]
-[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxContainer/CostEdit" to="." method="_on_cost_edit_value_changed"]
-[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxContainer2/HealthEdit" to="." method="_on_health_edit_value_changed"]
+[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxCost/CostEdit" to="." method="_on_cost_edit_value_changed"]
+[connection signal="value_changed" from="ScrollContainer/VBoxContainer/HBoxHealth/HealthEdit" to="." method="_on_health_edit_value_changed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxSave/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer/HBoxSave/SaveAsButton" to="." method="open_save_as_dialog"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

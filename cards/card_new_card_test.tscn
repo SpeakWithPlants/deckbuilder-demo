@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://284e0x7xxwoj"]
+
+[ext_resource type="Script" uid="uid://dstwl21wp2qw1" path="res://card/card_model.gd" id="1_o02tu"]
+[ext_resource type="Texture2D" uid="uid://2hdiifnn1ape" path="res://card/assets/card_ghost_base.png" id="2_2c4s8"]
+[ext_resource type="Texture2D" uid="uid://dc6f5p5t31hmh" path="res://card/assets/card_banner.png" id="3_42kab"]
+[ext_resource type="Texture2D" uid="uid://du3gbqisqsfvo" path="res://card/assets/card_mount.png" id="4_b0oma"]
+[ext_resource type="Texture2D" uid="uid://b0xl8q6iiecp7" path="res://card/assets/card_description.png" id="5_13ic6"]
+[ext_resource type="Texture2D" uid="uid://d4hknl182a46m" path="res://card/assets/card_ink.png" id="6_qq5pe"]
+[ext_resource type="Texture2D" uid="uid://c7wv11e56a5cn" path="res://card/assets/card_health.png" id="7_3jwl6"]
+[ext_resource type="Texture2D" uid="uid://tevmavp3dyox" path="res://card/assets/card_ghost_portrait_zephyr.png" id="8_b834s"]
+
+[sub_resource type="Animation" id="Animation_03v04"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RotationContainer:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_l03i2"]
+resource_name = "examine_oscillate"
+length = 8.0
+loop_mode = 1
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RotationContainer:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(2, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.05235988, -0.17453292, 0), Vector3(-0.05235988, 0.17453292, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_03v04"]
+_data = {
+&"RESET": SubResource("Animation_03v04"),
+&"examine_oscillate": SubResource("Animation_l03i2")
+}
+
+[node name="CardModel" type="Node3D" unique_id=1911353696]
+script = ExtResource("1_o02tu")
+title = "New Card Test"
+health = -4
+
+[node name="RotationContainer" type="Node3D" parent="." unique_id=547143780]
+transform = Transform3D(0.99896675, 0.0023785213, -0.045384888, 0, 0.9986295, 0.05233596, 0.04544717, -0.052281883, 0.9975977, 0, 0, 0)
+
+[node name="Base" type="Sprite3D" parent="RotationContainer" unique_id=1575729354]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.35315037)
+texture = ExtResource("2_2c4s8")
+
+[node name="Banner" type="Sprite3D" parent="RotationContainer" unique_id=1773438505]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, -0.6200094, 0.4979756)
+texture = ExtResource("3_42kab")
+
+[node name="Mount" type="Sprite3D" parent="RotationContainer" unique_id=1287233752]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.19183612)
+texture = ExtResource("4_b0oma")
+
+[node name="Plaque" type="Sprite3D" parent="RotationContainer" unique_id=1161524796]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.10746884)
+texture = ExtResource("5_13ic6")
+
+[node name="InkIcon" type="Sprite3D" parent="RotationContainer" unique_id=1005663709]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
+texture = ExtResource("6_qq5pe")
+
+[node name="HealthIcon" type="Sprite3D" parent="RotationContainer" unique_id=1125944509]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
+texture = ExtResource("7_3jwl6")
+
+[node name="Portrait" type="Sprite3D" parent="RotationContainer" unique_id=106034285]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, 0.19632745)
+texture = ExtResource("8_b834s")
+
+[node name="Title" type="Label3D" parent="RotationContainer" unique_id=583617998]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, 2.0131369, 0.5425565)
+pixel_size = 0.02
+no_depth_test = true
+render_priority = 1
+modulate = Color(0.28118682, 0.28118688, 0.28118682, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "New Card Test"
+font_size = 42
+
+[node name="Cost" type="Label3D" parent="RotationContainer" unique_id=1313488328]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.022334, 6.872205, 0.11993837)
+pixel_size = 0.02
+no_depth_test = true
+render_priority = 1
+outline_modulate = Color(0, 0, 0, 0)
+text = "0"
+font_size = 42
+
+[node name="Health" type="Label3D" parent="RotationContainer" unique_id=927859627]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9776983, 6.872205, 0.11993837)
+pixel_size = 0.02
+no_depth_test = true
+render_priority = 1
+modulate = Color(0.28118682, 0.28118688, 0.28118682, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "-4"
+font_size = 42
+
+[node name="Camera" type="Camera3D" parent="." unique_id=654522323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
+current = true
+size = 21.388
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2014448161]
+libraries/ = SubResource("AnimationLibrary_03v04")
