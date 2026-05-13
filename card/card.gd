@@ -22,9 +22,9 @@ const aim_move_duration = 0.3
 const hover_scale = 1.2
 const anim_trans_time = 0.45
 
-const radius: float = 50.0
-const gravity: float = 8000.0
-const friction: float = 5.5
+const radius: float = 300.0
+const gravity: float = 50000.0
+const friction: float = 5.0
 const time_constant: float = 0.2
 const max_rotation: Vector2 = Vector2(0.6, 1.0) * PI / 3
 
