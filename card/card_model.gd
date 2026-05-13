@@ -44,7 +44,8 @@ var velocity: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
-	get_parent().own_world_3d = true
+	if Engine.is_editor_hint():
+		return
 	camera_default_pos.z = $Camera.position.z
 	camera_examine_pos.z = $Camera.position.z
 	pass

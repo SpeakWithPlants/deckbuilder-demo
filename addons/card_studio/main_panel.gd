@@ -22,7 +22,7 @@ func _ready() -> void:
 	%FileNameLabel.text = file_name + "(*)"
 	
 	var card_model = card_model_scene.instantiate()
-	$"%3DViewport".add_child(card_model)
+	%Viewport3D.add_child(card_model)
 	
 	active_card = card_model
 	active_card.title = %TitleEdit.text

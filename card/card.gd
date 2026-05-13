@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 class_name Card
 
@@ -55,7 +56,17 @@ var rotation_tween: Tween = null
 @onready var mouse_area = $MouseArea
 
 
+func _ready() -> void:
+	if Engine.is_editor_hint():
+		%Viewport3D.own_world_3d = true
+	else:
+		%Viewport3D.own_world_3d = false
+	pass
+
+
 func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 	_update_physics(delta)
 	_update_3d_rotation2()
 	pass
