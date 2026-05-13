@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://4m5fotean0lk" path="res://card/card.gd" id="1_ags6k"]
 [ext_resource type="Texture2D" uid="uid://2hdiifnn1ape" path="res://card/assets/card_ghost_base.png" id="1_kikvd"]
 [ext_resource type="Texture2D" uid="uid://b0xl8q6iiecp7" path="res://card/assets/card_description.png" id="2_1i5pp"]
-[ext_resource type="Script" uid="uid://dstwl21wp2qw1" path="res://card/card_model.gd" id="2_7dy67"]
 [ext_resource type="Texture2D" uid="uid://tevmavp3dyox" path="res://card/assets/card_ghost_portrait_zephyr.png" id="3_pjytt"]
 [ext_resource type="Texture2D" uid="uid://dc6f5p5t31hmh" path="res://card/assets/card_banner.png" id="4_b4rk6"]
 [ext_resource type="Texture2D" uid="uid://du3gbqisqsfvo" path="res://card/assets/card_mount.png" id="4_pjytt"]
@@ -15,7 +14,7 @@ viewport_path = NodePath("Viewport3D")
 
 [sub_resource type="World3D" id="World3D_ags6k"]
 
-[sub_resource type="Animation" id="Animation_03v04"]
+[sub_resource type="Animation" id="Animation_ags6k"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -30,7 +29,7 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_l03i2"]
+[sub_resource type="Animation" id="Animation_7dy67"]
 resource_name = "examine_oscillate"
 length = 8.0
 loop_mode = 1
@@ -48,69 +47,80 @@ tracks/0/keys = {
 "values": [Vector3(-0.05235988, -0.17453292, 0), Vector3(-0.05235988, 0.17453292, 0)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_03v04"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_houxr"]
 _data = {
-&"RESET": SubResource("Animation_03v04"),
-&"examine_oscillate": SubResource("Animation_l03i2")
+&"RESET": SubResource("Animation_ags6k"),
+&"examine_oscillate": SubResource("Animation_7dy67")
 }
 
 [node name="Card" type="Node2D" unique_id=1123613253]
 script = ExtResource("1_ags6k")
+title = null
+cost = null
+health = null
 
 [node name="Node2D" type="Sprite2D" parent="." unique_id=876562659]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.365, 0.365)
 texture = SubResource("ViewportTexture_po74q")
 
 [node name="MouseArea" type="Area2D" parent="." unique_id=384426070]
-visible = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="MouseArea" unique_id=293319027]
 polygon = PackedVector2Array(-104, 152, -104, -120, -48, -167, 48, -167, 104, -120, 104, 152)
 
 [node name="Viewport3D" type="SubViewport" parent="." unique_id=1923222713]
 unique_name_in_owner = true
+own_world_3d = true
 world_3d = SubResource("World3D_ags6k")
 transparent_bg = true
 handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(1920, 1080)
 
-[node name="Card3D" type="Node3D" parent="Viewport3D" unique_id=1626107328]
-unique_name_in_owner = true
-script = ExtResource("2_7dy67")
-
-[node name="RotationContainer" type="Node3D" parent="Viewport3D/Card3D" unique_id=335266081]
+[node name="CardModel" type="Node3D" parent="Viewport3D" unique_id=1911353696]
 unique_name_in_owner = true
 
-[node name="Base" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=1285620738]
+[node name="RotationContainer" type="Node3D" parent="Viewport3D/CardModel" unique_id=547143780]
+unique_name_in_owner = true
+
+[node name="Base" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1575729354]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.35315037)
 texture = ExtResource("1_kikvd")
 
-[node name="Banner" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=968817447]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+[node name="Banner" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1773438505]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, -0.6200094, 0.4979756)
 texture = ExtResource("4_b4rk6")
 
-[node name="Mount" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=1652732772]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.07178879)
+[node name="Mount" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1287233752]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.19183612)
 texture = ExtResource("4_pjytt")
 
-[node name="Plaque" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=2088927509]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.105635166)
+[node name="Plaque" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1161524796]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, -0.10746884)
 texture = ExtResource("2_1i5pp")
 
-[node name="InkIcon" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=1984358454]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.27611256)
+[node name="InkIcon" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1005663709]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
 texture = ExtResource("5_6lcat")
 
-[node name="HealthIcon" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=1667685405]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.27611256)
+[node name="HealthIcon" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1125944509]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6311753e-09, -0.6200094, 0.04684964)
 texture = ExtResource("6_ut1v0")
 
-[node name="Portrait" type="Sprite3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=1302379065]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5523906)
+[node name="Portrait" type="Sprite3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=106034285]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6440964e-09, -0.6200094, 0.19632745)
 texture = ExtResource("3_pjytt")
 
-[node name="Title" type="Label3D" parent="Viewport3D/Card3D/RotationContainer" unique_id=306996460]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.62, 1.2)
+[node name="Title" type="Label3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=583617998]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2444588e-09, 2.0131369, 0.5425565)
 pixel_size = 0.02
 no_depth_test = true
 render_priority = 1
@@ -119,12 +129,33 @@ outline_modulate = Color(0, 0, 0, 0)
 text = "Test Card Label"
 font_size = 42
 
-[node name="Camera" type="Camera3D" parent="Viewport3D/Card3D" unique_id=118109713]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14.250328)
-fov = 90.0
-size = 28.0
+[node name="Cost" type="Label3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=1313488328]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.022334, 6.872205, 0.11993837)
+pixel_size = 0.02
+no_depth_test = true
+render_priority = 1
+outline_modulate = Color(0, 0, 0, 0)
+text = "50"
+font_size = 42
+
+[node name="Health" type="Label3D" parent="Viewport3D/CardModel/RotationContainer" unique_id=927859627]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9776983, 6.872205, 0.11993837)
+pixel_size = 0.02
+no_depth_test = true
+render_priority = 1
+modulate = Color(0.28118682, 0.28118688, 0.28118682, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "12"
+font_size = 42
+
+[node name="Camera3D" type="Camera3D" parent="Viewport3D/CardModel" unique_id=654522323]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
+size = 21.388
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=818348076]
 unique_name_in_owner = true
-root_node = NodePath("../Viewport3D/Card3D")
-libraries/ = SubResource("AnimationLibrary_03v04")
+root_node = NodePath("../Viewport3D/CardModel")
+libraries/ = SubResource("AnimationLibrary_houxr")

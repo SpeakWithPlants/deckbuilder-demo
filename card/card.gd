@@ -20,14 +20,30 @@ enum AimingStyle {
 const move_duration = 0.5
 const aim_move_duration = 0.3
 const hover_scale = 1.2
+const anim_trans_time = 0.45
 
-const radius: float = 300.0
-const gravity: float = 50000.0
-const friction: float = 5
+const radius: float = 50.0
+const gravity: float = 8000.0
+const friction: float = 5.5
 const time_constant: float = 0.2
 const max_rotation: Vector2 = Vector2(0.6, 1.0) * PI / 3
 
 @export var aiming_style: AimingStyle = AimingStyle.FROM_HAND
+@export var title: String = "":
+	set(value):
+		title = value
+		if has_node("%Title"):
+			%Title.text = value
+@export var cost: int = 0:
+	set(value):
+		cost = value
+		if has_node("%Cost"):
+			%Cost.text = str(value)
+@export var health: int = 0:
+	set(value):
+		health = value
+		if has_node("%Health"):
+			%Health.text = str(value)
 
 var face_down: bool = false
 var move_tween: Tween = null
@@ -41,8 +57,7 @@ var state: State = State.DRAW:
 			mass_pos = pos_data.global_position
 		state = value
 		reposition()
-		if card != null:
-			card.enter_state(value)
+		enter_state(value)
 var state_pos_data: Dictionary = {}
 
 var destination_pos = null
@@ -50,17 +65,26 @@ var mass_pos: Vector2 = Vector2(1920, 1080) / 2
 var acceleration: Vector2 = Vector2.ZERO
 var velocity: Vector2 = Vector2.ZERO
 var rotation_tween: Tween = null
+var rotation_scale: Vector3 = Vector3(PI, PI, PI / 2) / 100
+var angular_velocity: Vector3 = Vector3.ONE * 0.1
+var angular_acceleration: float = 100.0
+var clamp_rotation: Vector3 = Vector3.ONE * PI / 2
+var camera_tween: Tween
+var camera_default_pos = Vector3(0.0, 0.2, 0.0)
+var camera_examine_pos = Vector3(0.0, 0.0, 0.0)
+var velocity_2d: Vector2 = Vector2.ZERO
+var last_target_rotation: Vector3 = Vector3.ZERO
+var target_rotation: Vector3 = Vector3.ZERO
 
-@onready var card = $%Card3D
-@onready var rotator_3d = $%RotationContainer
+@onready var rotator_3d = %RotationContainer
 @onready var mouse_area = $MouseArea
 
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
-		%Viewport3D.own_world_3d = true
-	else:
-		%Viewport3D.own_world_3d = false
+		return
+	camera_default_pos.z = %Camera3D.position.z
+	camera_examine_pos.z = %Camera3D.position.z
 	pass
 
 
@@ -100,6 +124,26 @@ func reposition() -> void:
 		var scl = pos_data.get("scale")
 		var z = pos_data.get("z_index")
 		_tween_to_orientation(pos, rot, scl, z)
+	pass
+
+
+func enter_state(new_state: Card.State) -> void:
+	if new_state == Card.State.EXAMINE:
+		_tween_camera_to(camera_examine_pos, anim_trans_time)
+		%AnimationPlayer.play("examine_oscillate")
+	else:
+		_tween_camera_to(camera_default_pos, anim_trans_time)
+		%AnimationPlayer.play("RESET")
+	pass
+
+
+func _tween_camera_to(pos: Vector3, delta_time: float) -> void:
+	if camera_tween != null:
+		camera_tween.kill()
+	camera_tween = create_tween()
+	camera_tween.set_trans(Tween.TRANS_ELASTIC)
+	camera_tween.set_ease(Tween.EASE_OUT)
+	camera_tween.tween_property(%Camera3D, "position", pos, delta_time)
 	pass
 
 

@@ -23,8 +23,6 @@ const friction: float = 5.5
 		if has_node("%Health"):
 			%Health.text = str(value)
 
-@export var aim_diff_vector: Vector2 = Vector2.ZERO
-
 var rotation_scale: Vector3 = Vector3(PI, PI, PI / 2) / 100
 var angular_velocity: Vector3 = Vector3.ONE * 0.1
 var angular_acceleration: float = 100.0
@@ -54,10 +52,10 @@ func _ready() -> void:
 func enter_state(state: Card.State) -> void:
 	if state == Card.State.EXAMINE:
 		_tween_camera_to(camera_examine_pos, anim_trans_time)
-		$AnimationPlayer.play("examine_oscillate")
+		%AnimationPlayer.play("examine_oscillate")
 	else:
 		_tween_camera_to(camera_default_pos, anim_trans_time)
-		$AnimationPlayer.play("RESET")
+		%AnimationPlayer.play("RESET")
 	pass
 
 
