@@ -92,8 +92,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
-	_update_physics(delta)
-	_update_3d_rotation2()
+	_update_physics_sim(delta)
 	pass
 
 
@@ -124,7 +123,7 @@ func reposition() -> void:
 		var rot = pos_data.get("global_rotation")
 		var scl = pos_data.get("scale")
 		var z = pos_data.get("z_index")
-		_tween_to_orientation(pos, rot, scl, z)
+		_tween_to(pos, rot, scl, z)
 	pass
 
 
@@ -148,7 +147,7 @@ func _tween_camera_to(pos: Vector3, delta_time: float) -> void:
 	pass
 
 
-func _tween_to_orientation(pos: Vector2, rot = null, scl = null, z = null) -> void:
+func _tween_to(pos: Vector2, rot = null, scl = null, z = null) -> void:
 	if move_tween != null:
 		move_tween.kill()
 	move_tween = create_tween()
@@ -172,9 +171,14 @@ func _tween_to_orientation(pos: Vector2, rot = null, scl = null, z = null) -> vo
 	pass
 
 
-func _update_physics(delta) -> void:
+func _update_physics_sim(delta) -> void:
+	if not (state in [State.AIM, State.EXAMINE]):
+		# soft-reset physics if the card is not being moved by the player
+		mass_pos = destination_pos
 	if destination_pos == null:
 		return
+	
+	# update simulated pendulum physics
 	var local_mass_pos = mass_pos - destination_pos
 	var a_direction = local_mass_pos.normalized()
 	var mass_distance = local_mass_pos.length()
@@ -197,12 +201,8 @@ func _update_physics(delta) -> void:
 	var new_distance = new_local_mass_pos.length()
 	if new_distance >= radius:
 		mass_pos = destination_pos + new_local_mass_pos.limit_length(radius)
-	pass
 
-
-func _update_3d_rotation2() -> void:
-	if destination_pos == null:
-		return
+	# update 3D rotation
 	var pos = mass_pos - destination_pos
 	var rot = Vector3.ZERO
 	rot.x = max_rotation.x * _smooth_rotation(pos.y / radius)
@@ -212,24 +212,6 @@ func _update_3d_rotation2() -> void:
 		rotation_tween.kill()
 	rotation_tween = create_tween()
 	rotation_tween.tween_property(rotator_3d, "rotation", rot, time_constant)
-	pass
-
-
-func _update_3d_rotation() -> void:
-	var pos = mass_pos - destination_pos
-	var scaling_factor = 6
-	var rot = Vector2(sign(pos.y), sign(-pos.x)) * PI / (2 * scaling_factor)
-	if abs(pos.x) < radius:
-		rot.x = asin(pos.y / sqrt(pow(radius, 2) - pow(pos.x, 2))) / scaling_factor
-	if abs(pos.y) < radius:
-		rot.y = asin(pos.x / sqrt(pow(radius, 2) - pow(pos.y, 2))) / scaling_factor
-	rot.x = max_rotation.x * _smooth_rotation(-rot.x)
-	rot.y = max_rotation.y * _smooth_rotation(-rot.y)
-	if rotation_tween != null:
-		rotation_tween.kill()
-	rotation_tween = create_tween()
-	var new_rotation = Vector3(rot.x, rot.y, rotator_3d.rotation.z)
-	rotation_tween.tween_property(rotator_3d, "rotation", new_rotation, time_constant)
 	pass
 
 

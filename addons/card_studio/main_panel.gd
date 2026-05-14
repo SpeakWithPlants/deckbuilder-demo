@@ -1,10 +1,10 @@
 @tool
 extends HSplitContainer
 
-const card_model_scene = preload("res://card/card_model.tscn")
+const card_scene = preload("res://card/card.tscn")
 
 
-var active_card: CardModel
+var active_card: Card
 var file_name: String = "card_new_card.tscn"
 var save_path: String = "res://"
 var edited: bool = true:
@@ -21,10 +21,10 @@ func _ready() -> void:
 	file_name = _format_file_name(%TitleEdit.text) + ".tscn"
 	%FileNameLabel.text = file_name + "(*)"
 	
-	var card_model = card_model_scene.instantiate()
-	%Viewport3D.add_child(card_model)
+	var new_card = card_scene.instantiate()
+	%Viewport3D.add_child(new_card)
 	
-	active_card = card_model
+	active_card = new_card
 	active_card.title = %TitleEdit.text
 	active_card.cost = int(%CostEdit.get_line_edit().text)
 	active_card.health = int(%HealthEdit.get_line_edit().text)
