@@ -22,13 +22,12 @@ func _ready() -> void:
 	%FileNameLabel.text = file_name + "(*)"
 	
 	var new_card = card_scene.instantiate()
-	%Viewport3D.add_child(new_card)
 	
 	active_card = new_card
 	active_card.title = %TitleEdit.text
 	active_card.cost = int(%CostEdit.get_line_edit().text)
 	active_card.health = int(%HealthEdit.get_line_edit().text)
-	active_card.enter_state(Card.State.EXAMINE)
+	active_card.state = Card.State.EXAMINE
 	pass
 
 

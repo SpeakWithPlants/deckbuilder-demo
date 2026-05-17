@@ -221,7 +221,8 @@ func _update_hand() -> void:
 		if examining_card != null:
 			card.state = Card.State.HAND
 		elif card in hovered_cards and (card == valid_target or aiming_card == null):
-			card.state = Card.State.HOVER
+			if card == hovered_cards.front():
+				card.state = Card.State.HOVER
 		else:
 			card.state = Card.State.HAND
 	pass

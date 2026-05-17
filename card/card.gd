@@ -18,6 +18,10 @@ enum AimingStyle {
 	ANYWHERE
 }
 
+const max_title_font_size = 42
+const min_title_font_size = 25
+const title_width_cap = 150
+
 const move_duration = 0.5
 const aim_move_duration = 0.3
 const hover_scale = 1.2
@@ -32,18 +36,18 @@ const max_rotation: Vector2 = Vector2(0.6, 1.0) * PI / 3
 @export var aiming_style: AimingStyle = AimingStyle.FROM_HAND
 @export var title: String = "":
 	set(value):
-		title = value
-		if has_node("%Title"):
+		if has_node("%Title") and _resize_title_if_necessary(value):
+			title = value
 			%Title.text = value
 @export var cost: int = 0:
 	set(value):
-		cost = value
 		if has_node("%Cost"):
+			cost = value
 			%Cost.text = str(value)
 @export var health: int = 0:
 	set(value):
-		health = value
 		if has_node("%Health"):
+			health = value
 			%Health.text = str(value)
 
 var face_down: bool = false
@@ -58,7 +62,7 @@ var state: State = State.DRAW:
 			mass_pos = pos_data.global_position
 		state = value
 		reposition()
-		enter_state(value)
+		_enter_state(value)
 var state_pos_data: Dictionary = {}
 
 var destination_pos = null
@@ -82,8 +86,6 @@ var target_rotation: Vector3 = Vector3.ZERO
 
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
 	camera_default_pos.z = %Camera3D.position.z
 	camera_examine_pos.z = %Camera3D.position.z
 	pass
@@ -96,10 +98,24 @@ func _process(delta: float) -> void:
 	pass
 
 
+func get_state_pos_data(card_state: State) -> Dictionary:
+	return state_pos_data.get(card_state)
+
+
+func set_state_pos_data(card_state: State, pos_data: Dictionary):
+	state_pos_data[card_state] = pos_data
+	pass
+
+
 func is_valid_target(target: Node2D) -> bool:
 	if aiming_style == AimingStyle.ANYWHERE:
 		return true
-	return _validate_target(target)
+	return validate_target(target)
+
+
+func validate_target(target: Node2D) -> bool:
+	# Default behavior, this should be overridden depending on the card
+	return target != null
 
 
 func activate(tween: Tween, target: Node2D) -> void:
@@ -107,12 +123,9 @@ func activate(tween: Tween, target: Node2D) -> void:
 	pass
 
 
-func get_state_pos_data(card_state: State) -> Dictionary:
-	return state_pos_data.get(card_state)
-
-
-func set_state_pos_data(card_state: State, pos_data: Dictionary):
-	state_pos_data[card_state] = pos_data
+func _play_activate_animation(tween: Tween, _target: Node2D) -> void:
+	# Default behavior, this should be overridden depending on the card
+	tween.tween_interval(0.7)
 	pass
 
 
@@ -127,7 +140,20 @@ func reposition() -> void:
 	pass
 
 
-func enter_state(new_state: Card.State) -> void:
+func _resize_title_if_necessary(value : String) -> bool:
+	var font : Font = %Title.font
+	if font == null:
+		font = get_tree().root.get_theme_default_font()
+	var size = font.get_multiline_string_size(value, %Title.horizontal_alignment)
+	var scaled_font_size = max_title_font_size * (title_width_cap / size.x)
+	if scaled_font_size < min_title_font_size:
+		return false
+	var capped_font_size = clamp(scaled_font_size, min_title_font_size, max_title_font_size)
+	%Title.font_size = capped_font_size
+	return true
+
+
+func _enter_state(new_state: Card.State) -> void:
 	if new_state == Card.State.EXAMINE:
 		_tween_camera_to(camera_examine_pos, anim_trans_time)
 		%AnimationPlayer.play("examine_oscillate")
@@ -217,14 +243,3 @@ func _update_physics_sim(delta) -> void:
 
 func _smooth_rotation(rot: float) -> float:
 	return (2 / (1 + pow(2, 4 * rot)) - 1)
-
-
-func _validate_target(target: Node2D) -> bool:
-	# Default behavior, this should be overridden depending on the card
-	return target != null
-
-
-func _play_activate_animation(tween: Tween, _target: Node2D) -> void:
-	# Default behavior, this should be overridden depending on the card
-	tween.tween_interval(0.7)
-	pass
